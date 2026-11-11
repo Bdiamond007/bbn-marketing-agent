@@ -5,10 +5,12 @@
  */
 import { z } from "zod";
 import * as Auth from "@bbn/auth";
+import * as Billing from "@bbn/billing";
+import { isSimulatedPayments } from "@bbn/integrations/fakes";
 import { ServiceError, type Clock } from "@bbn/domain";
 import { assertSameOrigin, clearSessionCookie, cookieName, errorResponse, json, locale, memberRole, parseBody, readCookie, requestContext, sessionCookie, uuid, type RequestContext } from "./http";
 
-export interface ApiDeps extends Auth.AuthDeps {
+export interface ApiDeps extends Billing.BillingDeps {
   clock: Clock;
   limiters: {
     signInIp: Auth.FixedWindowLimiter;
@@ -177,6 +179,55 @@ const handlers = {
     const b = await parseBody(req, z.object({ newOwnerUserId: uuid }));
     await Auth.transferOwnership(deps, s, param(p, "id"), b.newOwnerUserId, ctx);
     return json(null, 204, ctx);
+  },
+  "billing.overview": async (req, deps, ctx, p) => {
+    const s = await requireSession(req, deps);
+    return json(await Billing.getBillingOverview(deps, s, param(p, "id")), 200, ctx);
+  },
+  "billing.checkout": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ planCode: z.string().min(1).max(40) }));
+    return json(await Billing.startCheckout(deps, s, param(p, "id"), b.planCode, s.uiLocale, ctx), 200, ctx);
+  },
+  "billing.portal": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    return json(await Billing.openPortal(deps, s, param(p, "id"), s.uiLocale), 200, ctx);
+  },
+  "billing.cancel": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ mode: z.enum(["at_period_end", "immediately"]) }));
+    await Billing.cancelSubscription(deps, s, param(p, "id"), b.mode, ctx);
+    return json({ status: "requested" }, 202, ctx);
+  },
+  "billing.changePlan": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ planCode: z.string().min(1).max(40) }));
+    return json(await Billing.changePlan(deps, s, param(p, "id"), b.planCode, ctx), 202, ctx);
+  },
+  /** Webhook fournisseur : pas de session ni de contrôle d'origine ; signature sur le corps brut. */
+  "webhooks.stripe": async (req, deps, ctx) => {
+    const raw = await req.text();
+    if (raw.length > 512 * 1024) throw new ServiceError("validation_failed", { reason: "too_large" });
+    const r = await Billing.ingestWebhook(deps, raw, req.headers.get("stripe-signature"));
+    return json({ received: true, duplicate: r.duplicate }, 200, ctx);
+  },
+  /** Mode simulation uniquement : simule le paiement d'une session Checkout (démonstration locale). */
+  "dev.simulatePayment": async (req, deps, ctx) => {
+    if (!deps.simulation || !isSimulatedPayments(deps.payments)) throw new ServiceError("not_found");
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ sessionId: z.string().min(1).max(100) }));
+    const checkout = deps.payments.checkouts.find((c) => c.sessionId === b.sessionId);
+    if (!checkout) throw new ServiceError("not_found");
+    // Le simulateur ne paie que pour une organisation dont l'utilisateur gère la facturation.
+    await Billing.getBillingOverview(deps, s, checkout.organizationId);
+    for (const e of deps.payments.completeCheckout(b.sessionId)) await Billing.ingestWebhook(deps, e.rawBody, e.signature);
+    await Billing.projectPending(deps);
+    return json({ status: "simulated_payment_recorded" }, 200, ctx);
   },
 } satisfies Record<string, Handler>;
 

@@ -138,7 +138,7 @@ test("sections non livrées : état vide honnête, sans donnée inventée", asyn
   const email = uniqEmail("empty");
   await signUpAndVerify(page, email);
   await signIn(page, email);
-  for (const s of ["calendar", "billing", "reports"]) {
+  for (const s of ["calendar", "content", "reports"]) {
     await page.goto(`/fr/app/${s}`);
     await expect(page.getByRole("heading", { name: "Section pas encore disponible" })).toBeVisible();
   }
@@ -159,4 +159,36 @@ test("375 px : aucun défilement horizontal sur les écrans principaux", async (
     await page.goto(path);
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth), path).toBe(false);
   }
+});
+
+test("facturation : page de succès sans effet, paiement simulé, abonnement actif et droits réels", async ({ page }) => {
+  const email = uniqEmail("billing");
+  await signUpAndVerify(page, email);
+  await signIn(page, email);
+  await page.goto("/fr/app/organizations/new");
+  await page.getByLabel("Nom de l'organisation").fill("Boutique Facturation (fictive)");
+  await page.getByRole("button", { name: "Créer" }).click();
+  await expect(page).toHaveURL(/\/fr\/app$/);
+
+  // La page de retour Checkout n'accorde rien.
+  await page.goto("/fr/app/billing/success");
+  await expect(page.getByText("Cette page ne vaut pas confirmation.")).toBeVisible();
+  await page.goto("/fr/app/billing");
+  await expect(page.getByRole("heading", { name: "Aucun abonnement actif." })).toBeVisible();
+  await expect(page.getByText("Aucun cycle de droits en cours.")).toBeVisible();
+  await expectNoA11yViolations(page);
+
+  const essentiel = page.locator("section").filter({ has: page.getByRole("heading", { name: "Essentiel", level: 3 }) }).last();
+  await expect(essentiel.getByText(/^99,00\s\$ par mois$/)).toBeVisible();
+  await essentiel.getByRole("button", { name: "Choisir ce plan" }).click();
+  await expect(page).toHaveURL(/\/fr\/app\/billing\/simulated-checkout\?session=/);
+  await expect(page.getByText("Aucun paiement réel n'est effectué.")).toBeVisible();
+  await page.getByRole("button", { name: "Simuler un paiement réussi" }).click();
+  await expect(page).toHaveURL(/\/fr\/app\/billing$/);
+  await expect(page.getByRole("heading", { name: "Plan actuel : Essentiel" })).toBeVisible();
+  await expect(page.getByText("Actif", { exact: true })).toBeVisible();
+  const rights = page.locator("section").filter({ has: page.getByRole("heading", { name: "Droits du cycle en cours" }) });
+  await expect(rights.getByText("15 contenus sources")).toBeVisible();
+  await expect(rights.getByText("45 publications")).toBeVisible();
+  await expectNoA11yViolations(page);
 });

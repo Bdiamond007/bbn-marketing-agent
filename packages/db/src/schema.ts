@@ -1,20 +1,32 @@
 // GÉNÉRÉ par scripts/introspect.sh (drizzle-kit pull + postprocess-schema) — ne pas éditer à la main.
-import { pgTable, unique, uuid, text, timestamp, integer, index, uniqueIndex, jsonb, date, boolean, bigint, numeric, primaryKey } from "drizzle-orm/pg-core"
+import { pgTable, uniqueIndex, unique, uuid, text, integer, timestamp, boolean, index, jsonb, date, bigint, numeric, primaryKey } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
 
-export const webhookEvents = pgTable("webhook_events", {
+export const subscriptions = pgTable("subscriptions", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
-	provider: text().notNull(),
-	externalEventId: text("external_event_id").notNull(),
-	eventType: text("event_type").notNull(),
-	status: text().default('received').notNull(),
-	payloadRef: text("payload_ref").notNull(),
-	receivedAt: timestamp("received_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	processedAt: timestamp("processed_at", { withTimezone: true, mode: 'string' }),
+	organizationId: uuid("organization_id").notNull(),
+	externalId: text("external_id"),
+	planCode: text("plan_code").notNull(),
+	planVersion: integer("plan_version").notNull(),
+	status: text().notNull(),
+	currentPeriodStart: timestamp("current_period_start", { withTimezone: true, mode: 'string' }),
+	currentPeriodEnd: timestamp("current_period_end", { withTimezone: true, mode: 'string' }),
+	graceUntil: timestamp("grace_until", { withTimezone: true, mode: 'string' }),
+	cancelAtPeriodEnd: boolean("cancel_at_period_end").default(false).notNull(),
+	version: integer().default(1).notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	providerCustomerRef: text("provider_customer_ref"),
+	providerUpdatedAt: timestamp("provider_updated_at", { withTimezone: true, mode: 'string' }),
+	graceDueAt: timestamp("grace_due_at", { withTimezone: true, mode: 'string' }),
+	scheduledPlanCode: text("scheduled_plan_code"),
+	scheduledPlanVersion: integer("scheduled_plan_version"),
 }, (table) => [
-	unique("webhook_events_provider_external_event_id_key").on(table.provider, table.externalEventId),
+	uniqueIndex("subscriptions_one_live_per_org").using("btree", table.organizationId.asc().nullsLast().op("uuid_ops")).where(sql`(status = ANY (ARRAY['incomplete'::text, 'active'::text, 'past_due'::text, 'suspended'::text]))`),
+	unique("subscriptions_organization_id_id_key").on(table.id, table.organizationId),
+	unique("subscriptions_external_id_key").on(table.externalId),
 ]);
 
 export const organizations = pgTable("organizations", {
@@ -164,26 +176,6 @@ export const comments = pgTable("comments", {
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 }, );
 
-export const subscriptions = pgTable("subscriptions", {
-	id: uuid().defaultRandom().primaryKey().notNull(),
-	organizationId: uuid("organization_id").notNull(),
-	externalId: text("external_id"),
-	planCode: text("plan_code").notNull(),
-	planVersion: integer("plan_version").notNull(),
-	status: text().notNull(),
-	currentPeriodStart: timestamp("current_period_start", { withTimezone: true, mode: 'string' }),
-	currentPeriodEnd: timestamp("current_period_end", { withTimezone: true, mode: 'string' }),
-	graceUntil: timestamp("grace_until", { withTimezone: true, mode: 'string' }),
-	cancelAtPeriodEnd: boolean("cancel_at_period_end").default(false).notNull(),
-	version: integer().default(1).notNull(),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-}, (table) => [
-	uniqueIndex("subscriptions_one_live_per_org").using("btree", table.organizationId.asc().nullsLast().op("uuid_ops")).where(sql`(status = ANY (ARRAY['incomplete'::text, 'active'::text, 'past_due'::text, 'suspended'::text]))`),
-	unique("subscriptions_organization_id_id_key").on(table.id, table.organizationId),
-	unique("subscriptions_external_id_key").on(table.externalId),
-]);
-
 export const billingCycles = pgTable("billing_cycles", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
 	organizationId: uuid("organization_id").notNull(),
@@ -206,7 +198,8 @@ export const entitlements = pgTable("entitlements", {
 	effectiveTo: timestamp("effective_to", { withTimezone: true, mode: 'string' }).notNull(),
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 }, (table) => [
-	index("entitlements_cycle_idx").using("btree", table.cycleId.asc().nullsLast().op("text_ops"), table.key.asc().nullsLast().op("text_ops")),
+	index("entitlements_cycle_idx").using("btree", table.cycleId.asc().nullsLast().op("text_ops"), table.key.asc().nullsLast().op("uuid_ops")),
+	uniqueIndex("entitlements_cycle_key_source_uq").using("btree", table.cycleId.asc().nullsLast().op("uuid_ops"), table.key.asc().nullsLast().op("text_ops"), table.source.asc().nullsLast().op("uuid_ops")),
 ]);
 
 export const usageReservations = pgTable("usage_reservations", {
@@ -366,6 +359,24 @@ export const supportGrants = pgTable("support_grants", {
 	expiresAt: timestamp("expires_at", { withTimezone: true, mode: 'string' }).notNull(),
 	revokedAt: timestamp("revoked_at", { withTimezone: true, mode: 'string' }),
 }, );
+
+export const webhookEvents = pgTable("webhook_events", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	provider: text().notNull(),
+	externalEventId: text("external_event_id").notNull(),
+	eventType: text("event_type").notNull(),
+	status: text().default('received').notNull(),
+	payloadRef: text("payload_ref"),
+	receivedAt: timestamp("received_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	processedAt: timestamp("processed_at", { withTimezone: true, mode: 'string' }),
+	payload: jsonb(),
+	attempts: integer().default(0).notNull(),
+	lastError: text("last_error"),
+	organizationId: uuid("organization_id"),
+}, (table) => [
+	index("webhook_events_pending_idx").using("btree", table.receivedAt.asc().nullsLast().op("timestamptz_ops")).where(sql`(status = 'received'::text)`),
+	unique("webhook_events_provider_external_event_id_key").on(table.provider, table.externalEventId),
+]);
 
 export const privacyRequests = pgTable("privacy_requests", {
 	id: uuid().defaultRandom().primaryKey().notNull(),

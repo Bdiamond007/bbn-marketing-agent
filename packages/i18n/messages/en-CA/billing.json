@@ -1,4 +1,58 @@
 {
   "cancelAtRenewal": "Cancel at next renewal",
-  "remaining": "{count, plural, one {# post remaining} other {# posts remaining}}"
+  "remaining": "{count, plural, one {# post remaining} other {# posts remaining}}",
+  "title": "Billing",
+  "lead": "Your organization's plan, status and entitlements.",
+  "currentPlan": "Current plan: {plan}",
+  "noSubscription": "No active subscription.",
+  "status": {
+    "label": "Status",
+    "incomplete": "Awaiting payment",
+    "active": "Active",
+    "past_due": "Payment overdue",
+    "canceled": "Canceled",
+    "expired": "Expired",
+    "suspended": "Suspended"
+  },
+  "period": "Current period: {start} to {end}",
+  "grace": "Payment overdue. Already approved posts can still go out until {date}; no new generation or scheduling until then.",
+  "graceOver": "Grace period over: no posting or generation until payment.",
+  "cancelScheduled": "Cancellation scheduled at the end of the period, on {date}.",
+  "scheduledPlan": "Switching to the {plan} plan at next renewal.",
+  "readOnly": "Subscription ended: viewing and export remain available for 30 days.",
+  "plans": "Plans",
+  "perMonth": "{price} per month",
+  "taxesNote": "Prices exclude taxes, in Canadian dollars.",
+  "choose": "Choose this plan",
+  "switchTo": "Switch to this plan",
+  "current": "Current plan",
+  "planNames": {
+    "essentiel": "Essential",
+    "croissance": "Growth",
+    "accompagne": "Assisted"
+  },
+  "entitlementsTitle": "Current cycle entitlements",
+  "noCycle": "No entitlement cycle in progress.",
+  "entitlements": {
+    "content_items": "{count, plural, one {# source content} other {# source contents}}",
+    "publications": "{count, plural, one {# post} other {# posts}}",
+    "users": "{count, plural, one {# user} other {# users}}",
+    "social_accounts": "{count, plural, one {# social account} other {# social accounts}}",
+    "brands": "{count, plural, one {# brand} other {# brands}}",
+    "regenerations_per_item": "{count, plural, one {# regeneration per content} other {# regenerations per content}}"
+  },
+  "portal": "Manage payment method",
+  "changeRequested": "Request sent. The change will appear once the payment provider confirms it.",
+  "ownerOnly": "Only the organization owner manages billing.",
+  "success": {
+    "title": "Payment pending confirmation",
+    "body": "Your subscription will be activated once the payment provider confirms the payment. This page is not a confirmation.",
+    "back": "Back to billing"
+  },
+  "simulated": {
+    "title": "Simulated payment",
+    "body": "No real payment is made. This button reproduces the confirmation the payment provider would send.",
+    "pay": "Simulate a successful payment",
+    "done": "Simulated payment recorded."
+  }
 }

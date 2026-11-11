@@ -27,8 +27,13 @@ export interface Adapters {
   social: Partial<Record<SocialProvider, SocialPublisher>>;
 }
 
-/** Codes de prix autorisés côté serveur (provisoires, ADR-0002). */
-export const ALLOWED_PRICE_CODES = ["essentiel_monthly_cad_v1", "croissance_monthly_cad_v1", "accompagne_monthly_cad_v1"] as const;
+/** Catalogue des prix autorisés côté serveur : code de prix → montant en cents CAD (ADR-0002, provisoire). */
+export const PRICE_CATALOG = {
+  essentiel_monthly_cad_v1: 9900,
+  croissance_monthly_cad_v1: 17900,
+  accompagne_monthly_cad_v1: 39900,
+} as const satisfies Record<string, number>;
+export const ALLOWED_PRICE_CODES = Object.keys(PRICE_CATALOG) as (keyof typeof PRICE_CATALOG)[];
 
 export class LiveAdapterNotImplementedError extends Error {
   constructor(what: string, lot: string) {
@@ -48,7 +53,7 @@ export function createAdapters(cfg: Pick<AppConfig, "ADAPTER_MODE" | "APP_ENV">,
       storage: new FakeObjectStorage(clock),
       queue: new FakeMessageQueue(clock),
       email: new FakeEmailSender(),
-      payments: new FakePaymentsProvider(clock, ALLOWED_PRICE_CODES),
+      payments: new FakePaymentsProvider(clock, PRICE_CATALOG),
       ai: new FakeAiTextProvider(clock),
       social: {
         facebook_page: new FakeSocialPublisher("facebook_page"),

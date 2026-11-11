@@ -1,7 +1,7 @@
 import { ManualClock } from "@bbn/domain";
 import { emailSenderContract, messageQueueContract, objectStorageContract, paymentsContract, socialPublisherContract } from "./contracts";
 import { FakeEmailSender, FakeMessageQueue, FakeObjectStorage, FakePaymentsProvider, FakeSocialPublisher } from "./fakes";
-import { ALLOWED_PRICE_CODES } from "./index";
+import { PRICE_CATALOG } from "./index";
 
 objectStorageContract("fake", () => {
   const clock = new ManualClock();
@@ -18,7 +18,7 @@ emailSenderContract("fake", () => ({ email: new FakeEmailSender() }));
 
 paymentsContract("fake", () => {
   const clock = new ManualClock();
-  const payments = new FakePaymentsProvider(clock, ALLOWED_PRICE_CODES);
+  const payments = new FakePaymentsProvider(clock, PRICE_CATALOG);
   return { payments, sign: (t, d, o) => payments.signEvent(t, d, o), advanceSeconds: (s) => clock.advanceSeconds(s) };
 });
 

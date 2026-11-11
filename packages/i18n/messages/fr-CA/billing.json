@@ -1,4 +1,58 @@
 {
   "cancelAtRenewal": "Annuler au prochain renouvellement",
-  "remaining": "{count, plural, one {# publication restante} other {# publications restantes}}"
+  "remaining": "{count, plural, one {# publication restante} other {# publications restantes}}",
+  "title": "Facturation",
+  "lead": "Plan, statut et droits de votre organisation.",
+  "currentPlan": "Plan actuel : {plan}",
+  "noSubscription": "Aucun abonnement actif.",
+  "status": {
+    "label": "Statut",
+    "incomplete": "En attente de paiement",
+    "active": "Actif",
+    "past_due": "Paiement en retard",
+    "canceled": "Annulé",
+    "expired": "Expiré",
+    "suspended": "Suspendu"
+  },
+  "period": "Période en cours : du {start} au {end}",
+  "grace": "Paiement en retard. Les contenus déjà approuvés peuvent partir jusqu'au {date} ; aucune nouvelle génération ni programmation d'ici là.",
+  "graceOver": "Délai de grâce terminé : aucun envoi ni génération jusqu'au règlement.",
+  "cancelScheduled": "Annulation prévue à la fin de la période, le {date}.",
+  "scheduledPlan": "Passage au plan {plan} au prochain renouvellement.",
+  "readOnly": "Abonnement terminé : consultation et export possibles pendant 30 jours.",
+  "plans": "Plans",
+  "perMonth": "{price} par mois",
+  "taxesNote": "Montants hors taxes, en dollars canadiens.",
+  "choose": "Choisir ce plan",
+  "switchTo": "Passer à ce plan",
+  "current": "Plan actuel",
+  "planNames": {
+    "essentiel": "Essentiel",
+    "croissance": "Croissance",
+    "accompagne": "Accompagné"
+  },
+  "entitlementsTitle": "Droits du cycle en cours",
+  "noCycle": "Aucun cycle de droits en cours.",
+  "entitlements": {
+    "content_items": "{count, plural, one {# contenu source} other {# contenus sources}}",
+    "publications": "{count, plural, one {# publication} other {# publications}}",
+    "users": "{count, plural, one {# utilisateur} other {# utilisateurs}}",
+    "social_accounts": "{count, plural, one {# compte social} other {# comptes sociaux}}",
+    "brands": "{count, plural, one {# marque} other {# marques}}",
+    "regenerations_per_item": "{count, plural, one {# régénération par contenu} other {# régénérations par contenu}}"
+  },
+  "portal": "Gérer le moyen de paiement",
+  "changeRequested": "Demande envoyée. Le changement s'affichera dès sa confirmation par le fournisseur de paiement.",
+  "ownerOnly": "Seul le propriétaire de l'organisation gère la facturation.",
+  "success": {
+    "title": "Paiement en cours de confirmation",
+    "body": "Votre abonnement sera activé dès que le fournisseur de paiement aura confirmé le paiement. Cette page ne vaut pas confirmation.",
+    "back": "Retour à la facturation"
+  },
+  "simulated": {
+    "title": "Paiement simulé",
+    "body": "Aucun paiement réel n'est effectué. Ce bouton reproduit la confirmation que le fournisseur de paiement enverrait.",
+    "pay": "Simuler un paiement réussi",
+    "done": "Paiement simulé enregistré."
+  }
 }

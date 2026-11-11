@@ -38,6 +38,9 @@ importers:
       '@bbn/auth':
         specifier: workspace:*
         version: link:../../packages/auth
+      '@bbn/billing':
+        specifier: workspace:*
+        version: link:../../packages/billing
       '@bbn/config':
         specifier: workspace:*
         version: link:../../packages/config
@@ -114,9 +117,15 @@ importers:
 
   apps/worker:
     dependencies:
+      '@bbn/billing':
+        specifier: workspace:*
+        version: link:../../packages/billing
       '@bbn/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@bbn/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@bbn/domain':
         specifier: workspace:*
         version: link:../../packages/domain
@@ -157,6 +166,34 @@ importers:
       pg:
         specifier: 8.23.1
         version: 8.23.1
+    devDependencies:
+      '@types/pg':
+        specifier: 8.23.1
+        version: 8.23.1
+
+  packages/billing:
+    dependencies:
+      '@bbn/auth':
+        specifier: workspace:*
+        version: link:../auth
+      '@bbn/db':
+        specifier: workspace:*
+        version: link:../db
+      '@bbn/domain':
+        specifier: workspace:*
+        version: link:../domain
+      '@bbn/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@bbn/integrations':
+        specifier: workspace:*
+        version: link:../integrations
+      pg:
+        specifier: 8.23.1
+        version: 8.23.1
+      zod:
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       '@types/pg':
         specifier: 8.23.1

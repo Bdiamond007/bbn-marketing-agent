@@ -8,7 +8,8 @@ import type {} from "../../../../packages/test-utils/src/context";
 import { FakeIdentityProvider } from "@bbn/auth";
 import { createPool } from "@bbn/db";
 import { ManualClock } from "@bbn/domain";
-import { FakeEmailSender } from "@bbn/integrations/fakes";
+import { PRICE_CATALOG } from "@bbn/integrations";
+import { FakeEmailSender, FakePaymentsProvider } from "@bbn/integrations/fakes";
 import { createLimiters, dispatch, type ApiDeps, type HandlerName } from "./api";
 
 const BASE = "http://localhost:3000";
@@ -51,7 +52,7 @@ beforeAll(() => {
   const clock = new ManualClock(new Date());
   pool = createPool(inject("dbUrls").appUrl, 4);
   email = new FakeEmailSender();
-  deps = { pool, idp: new FakeIdentityProvider(clock), email, clock, appBaseUrl: BASE, limiters: createLimiters(clock) };
+  deps = { pool, idp: new FakeIdentityProvider(clock), email, clock, appBaseUrl: BASE, limiters: createLimiters(clock), payments: new FakePaymentsProvider(clock, PRICE_CATALOG), simulation: true };
 });
 afterAll(async () => {
   await pool?.end();
@@ -164,5 +165,24 @@ describe("organisations et équipe HTTP", () => {
     const orgId = (await call("organizations.create", { body: { name: "Seul (fictif)", defaultLocale: "fr-CA" }, cookie: owner.cookie })).body.id;
     const r = await call("members.remove", { method: "DELETE", cookie: owner.cookie, params: { id: orgId, userId: owner.userId } });
     expect([r.status, r.body.error.code]).toEqual([422, "last_owner_protected"]);
+  });
+});
+
+describe("webhook de paiement HTTP", () => {
+  it("corps brut + signature : 400 si invalide, 200 puis doublon acquitté", async () => {
+    const fake = deps.payments as FakePaymentsProvider;
+    const e = fake.signEvent("subscription.updated", { probe: true });
+    const post = (body: string, sig: string | null) =>
+      dispatch("webhooks.stripe", new Request(`${BASE}/api/v1/webhooks/stripe`, { method: "POST", headers: sig ? { "stripe-signature": sig } : {}, body }), deps);
+    expect((await post(e.rawBody, null)).status).toBe(400);
+    expect((await post(e.rawBody + " ", e.signature)).status).toBe(400);
+    const ok = await post(e.rawBody, e.signature);
+    expect([ok.status, await ok.json()]).toEqual([200, { received: true, duplicate: false }]);
+    expect(await (await post(e.rawBody, e.signature)).json()).toEqual({ received: true, duplicate: true });
+  });
+
+  it("paiement simulé : refusé hors mode simulation", async () => {
+    const r = await dispatch("dev.simulatePayment", new Request(`${BASE}/x`, { method: "POST", headers: { origin: BASE, "content-type": "application/json" }, body: "{}" }), { ...deps, simulation: false });
+    expect(r.status).toBe(404);
   });
 });

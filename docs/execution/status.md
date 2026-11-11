@@ -5,7 +5,7 @@ Le succès sur simulateur ne prouve pas une intégration réelle. Dernière mise
 
 | Lot | Titre | Statut | Responsable | Dernier commit | Preuve | Dépendances | Blocages / remarques |
 |---|---|---|---|---|---|---|---|
-| E00 | Contrat, backlog et décisions | READY_FOR_REVIEW | agent de réalisation → propriétaire | 2304bc7 | [rapport](reports/E00_2026-11-11.md) | — | ADR-0002 (quotas/prix) à approuver par le propriétaire |
+| E00 | Contrat, backlog et décisions | VERIFIED_LOCAL | agent de réalisation ; validé par le propriétaire | 2304bc7 | [rapport](reports/E00_2026-11-11.md) | — | ADR-0002 accepté et accès support 72 h validé (2026-11-11) |
 | E01 | Monorepo et qualité de base | VERIFIED_LOCAL | agent de réalisation | 2304bc7 | [rapport](reports/E01_2026-11-11.md) | E00 | CI GitHub Actions écrite, non exécutée (NOT_RUN) |
 | E02 | Local et simulateurs | READY_FOR_REVIEW | agent de réalisation | 2304bc7 | [rapport](reports/E02_2026-11-11.md) | E01 | Docker Compose NOT_RUN (pas de démon Docker) ; PostgreSQL validé via `pnpm pg:local` |
 | E03 | Spikes sociaux et approbations | BLOCKED_EXTERNAL | propriétaire | — | — | E00/E02 | Aucune application développeur Meta/LinkedIn ni identifiant autorisé fourni |
@@ -13,7 +13,7 @@ Le succès sur simulateur ne prouve pas une intégration réelle. Dernière mise
 | E05 | Auth, équipe et RBAC | NOT_STARTED | — | — | — | E04 | Simulateur d'identité déjà présent (E02) ; prochain lot éligible |
 | E06 | UI, traduction et navigation | NOT_STARTED | — | — | — | E01/E05 | Socle présent : catalogues fr-CA/en-CA + `i18n:check`, tokens + test de contraste, pages /fr /en |
 | E07 | Abonnement et droits | NOT_STARTED | — | — | — | E04/E05/E06 | Schéma posé (E04) ; simulateur de paiements signé (E02) |
-| E08 | Quotas et ledger | NOT_STARTED | — | — | — | E04/E07 | Schéma posé (E04) ; ADR-0002 proposé |
+| E08 | Quotas et ledger | NOT_STARTED | — | — | — | E04/E07 | Schéma posé (E04) ; ADR-0002 accepté |
 | E09 | Onboarding et profil | NOT_STARTED | — | — | — | E05/E06/E08 | |
 | E10 | Médias privés | NOT_STARTED | — | — | — | E04/E06/E09 | |
 | E11 | Contenus et révisions | NOT_STARTED | — | — | — | E04/E06/E09/E10 | |

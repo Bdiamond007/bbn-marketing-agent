@@ -2,7 +2,7 @@
 
 - Date : 2026-11-11
 - Propriétaire : propriétaire du produit (règles commerciales) ; lead technique (mise en œuvre)
-- Statut : **Proposé** — règles reprises telles quelles de SPECIFICATION §3 ; prix et volumes à valider commercialement (H01, H02)
+- Statut : **Accepté** le 2026-11-11 par le propriétaire du produit — règles reprises telles quelles de SPECIFICATION §3. Les montants et volumes des plans restent des hypothèses commerciales à confirmer par les mesures du pilote (H01, H02) ; toute modification passera par un nouvel ADR.
 
 ## Contexte
 

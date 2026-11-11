@@ -13,6 +13,6 @@ Toute hypothèse est **à valider** ; aucune n'est un fait démontré. Source : 
 | H07 | Économie : contribution ~75 CAD avant frais fixes sur Essentiel | §3 | Mesure réelle au pilote | E24 | Hypothétique |
 | H08 | 16 à 22 semaines pour une petite équipe | §16 | Ré-estimation après E03/E04 | E04+ | À ré-estimer |
 | H09 | Objectifs non fonctionnels (99,5 %, p95 800 ms, RPO 15 min, RTO 4 h) | §14 | Mesure et exercice de restauration | E22, E23 | Cible, pas SLA |
-| H10 | Durée maximale d'un SupportGrant : 72 h | Choix technique (§4 dit « limité dans le temps ») | Décision propriétaire | E20 | Proposé |
+| H10 | Durée maximale d'un SupportGrant : 72 h | Choix technique (§4 dit « limité dans le temps ») | Décision propriétaire | E20 | **Validé** par le propriétaire (2026-11-11) |
 | H11 | Fuseau par défaut d'affichage côté serveur : America/Toronto, en attendant le fuseau de la marque | Choix technique | E09 (fuseau marque) | E09 | Provisoire |
 | H12 | Nom commercial « [Brand Name] » provisoire | §1 | Disponibilité du nom/marque | E24 | À décider |

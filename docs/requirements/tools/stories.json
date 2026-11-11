@@ -85,9 +85,9 @@
   "gwt": "Given un champ requis manquant When une génération est demandée Then 422 brand_incomplete",
   "screen": "brand",
   "entity": "Brand, BrandGuideline",
-  "endpoint": "PATCH /api/v1/brands/{id}",
-  "test": "à créer (E09)",
-  "status": "NOT_STARTED"
+  "endpoint": "/api/v1/organizations/{id}/brands[/{brandId}[/draft|/publish]]",
+  "test": "packages/domain/src/brand.test.ts ; packages/brands/src/brands.db.test.ts ; apps/web/e2e/app.spec.ts",
+  "status": "VERIFIED_LOCAL"
  },
  {
   "req": "MEDIA-01",

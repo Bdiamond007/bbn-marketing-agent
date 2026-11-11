@@ -1,0 +1,35 @@
+{
+  "appName": "[Brand Name]",
+  "simulationBanner": "Simulation mode: no real publishing, payment or sending takes place.",
+  "languageSwitcher": {
+    "label": "Language",
+    "fr": "Français",
+    "en": "English"
+  },
+  "nav": {
+    "home": "Home",
+    "calendar": "Calendar",
+    "content": "Content",
+    "brand": "Brand",
+    "media": "Media",
+    "accounts": "Accounts",
+    "reports": "Reports",
+    "team": "Team",
+    "billing": "Billing",
+    "preferences": "Preferences"
+  },
+  "states": {
+    "loading": "Loading…",
+    "empty": "Nothing to show yet.",
+    "error": "Something went wrong.",
+    "forbidden": "You don't have access to this page.",
+    "readonly": "Read-only",
+    "success": "Saved."
+  },
+  "home": {
+    "title": "Prepare, approve and schedule your social posts, in English and French.",
+    "lead": "An app for local businesses: your verified facts, your media, your approval on every version.",
+    "status": "App under construction. No feature is publicly available yet.",
+    "metaDescription": "Bilingual social content preparation, approval and scheduling for Canadian businesses."
+  }
+}

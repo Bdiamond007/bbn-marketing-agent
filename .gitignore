@@ -4,3 +4,15 @@
 !.dev.vars.example
 .env*
 !.env.example
+
+# monorepo
+node_modules/
+.next/
+dist/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+.pg-local/
+.DS_Store
+.drizzle-introspect/

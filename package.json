@@ -1,0 +1,38 @@
+{
+  "name": "bbn-social-saas",
+  "private": true,
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22.12.0 <23",
+    "pnpm": ">=10.28.0"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter @bbn/web dev",
+    "dev:worker": "pnpm --filter @bbn/worker dev",
+    "dev:infra": "docker compose up -d",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "pnpm -r --parallel typecheck",
+    "test": "vitest run --project unit",
+    "test:contracts": "vitest run --project contracts",
+    "test:db": "vitest run --project db",
+    "test:e2e": "pnpm --filter @bbn/web test:e2e",
+    "i18n:check": "tsx packages/i18n/scripts/check.ts",
+    "build": "pnpm -r build",
+    "db:migrate": "tsx packages/db/scripts/migrate.ts",
+    "db:seed": "tsx packages/db/scripts/seed.ts",
+    "db:bootstrap": "tsx packages/db/scripts/bootstrap.ts",
+    "pg:local": "bash scripts/pg-local.sh",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:contracts && pnpm i18n:check"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "22.20.5",
+    "eslint": "10.14.0",
+    "globals": "17.14.0",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.72.2",
+    "vitest": "4.1.12"
+  }
+}

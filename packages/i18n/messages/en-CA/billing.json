@@ -1,0 +1,4 @@
+{
+  "cancelAtRenewal": "Cancel at next renewal",
+  "remaining": "{count, plural, one {# post remaining} other {# posts remaining}}"
+}

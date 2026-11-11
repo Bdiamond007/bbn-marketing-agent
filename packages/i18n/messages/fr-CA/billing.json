@@ -1,0 +1,4 @@
+{
+  "cancelAtRenewal": "Annuler au prochain renouvellement",
+  "remaining": "{count, plural, one {# publication restante} other {# publications restantes}}"
+}

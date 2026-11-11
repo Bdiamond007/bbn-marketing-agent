@@ -1,0 +1,4 @@
+{
+  "requiredFields": "Champs requis manquants : {fields}",
+  "factValidUntil": "Valide jusqu'au {date}"
+}

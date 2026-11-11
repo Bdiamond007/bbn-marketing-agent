@@ -1,0 +1,23 @@
+# Cloudflare Workers static assets: the legacy prototype (index.html) is the only
+# file meant to be served from this repository root. Never publish source, docs or deps.
+.git
+.github
+node_modules
+apps
+packages
+infra
+docs
+scripts
+SPECIFICATION.md
+README.md
+*.json
+*.jsonc
+*.yaml
+*.yml
+*.ts
+*.mjs
+.env*
+.npmrc
+.nvmrc
+.gitignore
+.pg-local

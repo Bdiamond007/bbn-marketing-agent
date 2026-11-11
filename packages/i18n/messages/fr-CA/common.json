@@ -1,0 +1,35 @@
+{
+  "appName": "[Brand Name]",
+  "simulationBanner": "Mode simulation : aucune publication, aucun paiement et aucun envoi réel n'est effectué.",
+  "languageSwitcher": {
+    "label": "Langue",
+    "fr": "Français",
+    "en": "English"
+  },
+  "nav": {
+    "home": "Accueil",
+    "calendar": "Calendrier",
+    "content": "Contenus",
+    "brand": "Marque",
+    "media": "Médias",
+    "accounts": "Comptes",
+    "reports": "Rapports",
+    "team": "Équipe",
+    "billing": "Facturation",
+    "preferences": "Préférences"
+  },
+  "states": {
+    "loading": "Chargement…",
+    "empty": "Rien à afficher pour le moment.",
+    "error": "Une erreur est survenue.",
+    "forbidden": "Vous n'avez pas accès à cette page.",
+    "readonly": "Lecture seule",
+    "success": "Enregistré."
+  },
+  "home": {
+    "title": "Préparez, approuvez et programmez vos publications sociales, en français et en anglais.",
+    "lead": "Une application pour les entreprises locales : vos faits vérifiés, vos médias, votre approbation sur chaque version.",
+    "status": "Application en construction. Aucune fonctionnalité n'est encore offerte au public.",
+    "metaDescription": "Préparation, approbation et programmation de contenus sociaux bilingues pour entreprises canadiennes."
+  }
+}

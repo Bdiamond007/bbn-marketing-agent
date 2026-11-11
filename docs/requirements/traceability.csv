@@ -1,0 +1,25 @@
+requirement_id,story_id,screen,entity,endpoint_or_job,test_path,release,status
+AUTH-01,ST-AUTH-01a,auth/sign-up,User,fournisseur identité (Cognito / fake),packages/auth/src/fake-identity.test.ts,P0,IN_PROGRESS
+AUTH-01,ST-AUTH-01b,auth/recovery,User,fournisseur identité,packages/auth/src/fake-identity.test.ts,P0,IN_PROGRESS
+ORG-01,ST-ORG-01a,—,"Membership, toutes tables locataires",withTenant(),packages/db/src/isolation.db.test.ts,P0,VERIFIED_LOCAL
+ORG-01,ST-ORG-01b,team,"Invitation, Membership",POST /api/v1/organizations/{id}/invitations,packages/db/src/isolation.db.test.ts (invariant SQL) ; tests service E05,P0,IN_PROGRESS
+BRAND-01,ST-BRAND-01a,brand,"Brand, BrandGuideline",PATCH /api/v1/brands/{id},à créer (E09),P0,NOT_STARTED
+MEDIA-01,ST-MEDIA-01a,media,MediaAsset,POST /api/v1/brands/{id}/assets/uploads ; POST /api/v1/assets/{id}/complete,packages/integrations/src/fakes.test.ts (URLs signées) ; à compléter E10,P0,NOT_STARTED
+AI-01,ST-AI-01a,content,"AIJob, ContentItem",POST /api/v1/content-plans/{id}/generate ; job generation,à créer (E13) ; simulateur packages/integrations/src/fakes/ai.ts,P0,NOT_STARTED
+EDIT-01,ST-EDIT-01a,content/editor,"Revision, ContentVariant",POST /api/v1/variants/{id}/revisions,packages/db/src/isolation.db.test.ts (immuabilité SQL) ; à compléter E11,P0,IN_PROGRESS
+APPROVAL-01,ST-APPROVAL-01a,content/editor,"Approval, Revision",POST /api/v1/variants/{id}/approvals,packages/domain/src/revision-hash.test.ts ; packages/db/src/isolation.db.test.ts (hash/destination),P0,IN_PROGRESS
+CAL-01,ST-CAL-01a,calendar,Publication,POST /api/v1/publications ; GET /api/v1/calendar,à créer (E16),P0,NOT_STARTED
+SOC-01,ST-SOC-01a,—,CapabilityManifest,docs/integrations/manifests,preuve expurgée (E03),P0,BLOCKED_EXTERNAL
+SOC-01,ST-SOC-01b,accounts,SocialConnection,POST /api/v1/social-connections/{provider}/authorize ; GET …/callback,packages/integrations/src/fakes.test.ts (OAuth simulé) ; contrats live E17,P0,NOT_STARTED
+PUB-01,ST-PUB-01a,reports,"Publication, PublishingAttempt",job publishing,à créer (E18) ; contrat packages/integrations/src/contracts/social.ts,P0,NOT_STARTED
+PUB-02,ST-PUB-02a,reports,PublishingAttempt,job publishing / reconcile,packages/integrations/src/fakes.test.ts (doublon détectable) ; à compléter E18,P0,NOT_STARTED
+BILL-01,ST-BILL-01a,billing,"Subscription, WebhookEvent",POST /api/v1/webhooks/stripe,packages/integrations/src/contracts/payments.ts ; à compléter E07,P0,NOT_STARTED
+QUOTA-01,ST-QUOTA-01a,billing / tableau de bord,"UsageReservation, UsageLedger",service entitlements,"packages/db/src/isolation.db.test.ts (append-only, dédoublonnage) ; à compléter E08",P0,NOT_STARTED
+NOTIF-01,ST-NOTIF-01a,notifications,Notification,job notifications ; GET /api/v1/notifications,packages/db/src/isolation.db.test.ts (destinataire membre) ; packages/integrations/src/contracts/email.ts,P0,NOT_STARTED
+OPS-01,ST-OPS-01a,admin/production,StaffAssignment,console interne,à créer (E20),P0,NOT_STARTED
+ADMIN-01,ST-ADMIN-01a,admin,"SupportGrant, AuditEvent",console interne,packages/db/src/isolation.db.test.ts (bornes SQL) ; à compléter E20,P0,NOT_STARTED
+DATA-01,ST-DATA-01a,preferences / privacy,PrivacyRequest,POST /api/v1/privacy/export ; POST /api/v1/privacy/deletion,à créer (E21),P0,NOT_STARTED
+REPORT-01,ST-REPORT-01a,reports,"Publication, AnalyticsSnapshot",GET /api/v1/publications/{id},packages/db/src/isolation.db.test.ts (NULL ≠ 0) ; à compléter E20,P0,NOT_STARTED
+ANALYTICS-01,ST-ANALYTICS-01a,reports,AnalyticsSnapshot,job analytics,à créer,P1,NOT_STARTED
+MULTIBRAND-01,ST-MULTIBRAND-01a,brand,"Brand, Entitlement",POST /api/v1/brands,à créer,P1,NOT_STARTED
+AUTOPILOT-01,ST-AUTOPILOT-01a,—,—,—,—,P2,NOT_STARTED

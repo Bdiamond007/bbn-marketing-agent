@@ -1,0 +1,6 @@
+{
+  "approveVersion": "Approuver cette version",
+  "requestChanges": "Demander des modifications",
+  "versionLabel": "Version {number}",
+  "staleVersion": "Cette version a été modifiée par quelqu'un d'autre. Rechargez avant de continuer."
+}

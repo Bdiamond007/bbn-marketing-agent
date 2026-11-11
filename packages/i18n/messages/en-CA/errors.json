@@ -1,0 +1,7 @@
+{
+  "generic": "An unexpected error occurred. Reference code: {requestId}",
+  "notFound": "Page not found.",
+  "rateLimited": "Too many requests. Try again in a moment.",
+  "conflict": "Version conflict.",
+  "missingTranslation": "Text unavailable."
+}

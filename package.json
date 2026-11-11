@@ -23,7 +23,8 @@
     "db:seed": "tsx packages/db/scripts/seed.ts",
     "db:bootstrap": "tsx packages/db/scripts/bootstrap.ts",
     "pg:local": "bash scripts/pg-local.sh",
-    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:contracts && pnpm i18n:check"
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:contracts && pnpm i18n:check",
+    "test:smoke": "bash apps/worker/scripts/smoke.sh"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

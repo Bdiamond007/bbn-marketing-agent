@@ -326,20 +326,6 @@ export const analyticsSnapshots = pgTable("analytics_snapshots", {
 	capturedAt: timestamp("captured_at", { withTimezone: true, mode: 'string' }).notNull(),
 }, );
 
-export const outboxEvents = pgTable("outbox_events", {
-	id: uuid().defaultRandom().primaryKey().notNull(),
-	organizationId: uuid("organization_id").notNull(),
-	type: text().notNull(),
-	aggregateType: text("aggregate_type").notNull(),
-	aggregateId: uuid("aggregate_id").notNull(),
-	payload: jsonb().notNull(),
-	correlationId: text("correlation_id"),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	dispatchedAt: timestamp("dispatched_at", { withTimezone: true, mode: 'string' }),
-}, (table) => [
-	index("outbox_pending_idx").using("btree", table.createdAt.asc().nullsLast().op("timestamptz_ops")).where(sql`(dispatched_at IS NULL)`),
-]);
-
 export const staffAssignments = pgTable("staff_assignments", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
 	organizationId: uuid("organization_id").notNull(),
@@ -490,6 +476,29 @@ export const sessions = pgTable("sessions", {
 	unique("sessions_token_hash_key").on(table.tokenHash),
 ]);
 
+export const outboxEvents = pgTable("outbox_events", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	organizationId: uuid("organization_id").notNull(),
+	type: text().notNull(),
+	aggregateType: text("aggregate_type").notNull(),
+	aggregateId: uuid("aggregate_id").notNull(),
+	payload: jsonb().notNull(),
+	correlationId: text("correlation_id"),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	dispatchedAt: timestamp("dispatched_at", { withTimezone: true, mode: 'string' }),
+	queue: text().default('generation').notNull(),
+	dedupeKey: text("dedupe_key"),
+	availableAt: timestamp("available_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	attempts: integer().default(0).notNull(),
+	lockedBy: text("locked_by"),
+	lockedUntil: timestamp("locked_until", { withTimezone: true, mode: 'string' }),
+	deadAt: timestamp("dead_at", { withTimezone: true, mode: 'string' }),
+	lastError: text("last_error"),
+}, (table) => [
+	uniqueIndex("outbox_dedupe_uq").using("btree", table.organizationId.asc().nullsLast().op("text_ops"), table.dedupeKey.asc().nullsLast().op("text_ops")).where(sql`(dedupe_key IS NOT NULL)`),
+	index("outbox_pending_idx").using("btree", table.availableAt.asc().nullsLast().op("timestamptz_ops")).where(sql`((dispatched_at IS NULL) AND (dead_at IS NULL))`),
+]);
+
 export const brandDrafts = pgTable("brand_drafts", {
 	brandId: uuid("brand_id").primaryKey().notNull(),
 	organizationId: uuid("organization_id").notNull(),
@@ -498,6 +507,15 @@ export const brandDrafts = pgTable("brand_drafts", {
 	updatedBy: uuid("updated_by"),
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 }, );
+
+export const consumerInbox = pgTable("consumer_inbox", {
+	organizationId: uuid("organization_id").notNull(),
+	consumer: text().notNull(),
+	messageKey: text("message_key").notNull(),
+	processedAt: timestamp("processed_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, (table) => [
+	primaryKey({ columns: [table.consumer, table.messageKey], name: "consumer_inbox_pkey"}),
+]);
 
 export const memberships = pgTable("memberships", {
 	organizationId: uuid("organization_id").notNull(),

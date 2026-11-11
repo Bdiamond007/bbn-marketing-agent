@@ -5,15 +5,16 @@ import { createLogger } from "@bbn/observability";
 import { projectPending, reconcileSubscriptions } from "@bbn/billing";
 import { createPool } from "@bbn/db";
 import { cleanupOrphanUploads } from "@bbn/media";
-import { processBatch, type Handler } from "./consumer";
+import { randomUUID } from "node:crypto";
+import { consumeBatch, relayOutbox, outboxStats, type Handler } from "@bbn/jobs";
 
 // Validation au démarrage : configuration invalide (dont fake en production) ⇒ arrêt immédiat.
 const config = loadConfig();
 const logger = createLogger({ service: "worker", env: config.APP_ENV });
 const adapters = createAdapters(config, systemClock);
 
-/** Handlers par file. Vide en E02 : les consommateurs métier arrivent avec E12/E13/E18. */
-const handlers: Record<QueueName, Record<string, Handler>> = {
+/** Consommateurs idempotents par file (type d'événement → consommateur). Les handlers métier arrivent avec E13/E15/E18. */
+const handlers: Record<QueueName, Record<string, { consumer: string; handle: Handler }>> = {
   generation: {},
   publishing: {},
   notifications: {},
@@ -33,10 +34,22 @@ if (!pool) logger.warn("database_not_configured", { effect: "projection de factu
 const RECONCILE_EVERY_MS = 15 * 60 * 1000;
 let lastReconcile = 0;
 let lastMediaCleanup = 0;
+let lastStats = 0;
+const WORKER_ID = `worker-${randomUUID().slice(0, 8)}`;
 
 logger.info("worker_started", { adapterMode: adapters.mode, simulation: adapters.mode === "fake" });
 while (!stopping) {
   if (pool) {
+    // Relais d'outbox : événements validés → files (bail expirant, au moins une fois).
+    const relay = await relayOutbox({ pool, queue: adapters.queue, clock: systemClock, logger }, { workerId: WORKER_ID }).catch((e: unknown) => {
+      logger.error("outbox_relay_failed", { error: e instanceof Error ? e.name : "unknown" });
+      return null;
+    });
+    if (relay && relay.claimed > 0) logger.info("outbox_relay", { ...relay });
+    if (Date.now() - lastStats >= 60_000) {
+      lastStats = Date.now();
+      await outboxStats(pool, systemClock.now()).then((st) => logger.info("outbox_stats", st), () => undefined);
+    }
     // Projection des webhooks de paiement persistés (idempotente, au moins une fois).
     const r = await projectPending({ pool, payments: adapters.payments, clock: systemClock }).catch((e: unknown) => {
       logger.error("billing_projection_failed", { error: e instanceof Error ? e.name : "unknown" });
@@ -58,8 +71,10 @@ while (!stopping) {
       );
     }
   }
-  for (const q of Object.keys(handlers) as QueueName[]) {
-    await processBatch(adapters.queue, q, handlers[q], logger);
+  if (pool) {
+    for (const q of Object.keys(handlers) as QueueName[]) {
+      await consumeBatch({ pool, queue: adapters.queue, logger }, q, handlers[q]).catch((e: unknown) => logger.error("consume_failed", { queue: q, error: e instanceof Error ? e.name : "unknown" }));
+    }
   }
   await new Promise((r) => setTimeout(r, 1000));
 }

@@ -144,12 +144,24 @@ importers:
       '@bbn/integrations':
         specifier: workspace:*
         version: link:../../packages/integrations
+      '@bbn/jobs':
+        specifier: workspace:*
+        version: link:../../packages/jobs
       '@bbn/media':
         specifier: workspace:*
         version: link:../../packages/media
       '@bbn/observability':
         specifier: workspace:*
         version: link:../../packages/observability
+      drizzle-orm:
+        specifier: 0.45.4
+        version: 0.45.4(@types/pg@8.23.1)(pg@8.23.1)
+      pg:
+        specifier: 8.23.1
+        version: 8.23.1
+      sharp:
+        specifier: 0.34.5
+        version: 0.34.5
       zod:
         specifier: 4.6.7
         version: 4.6.7
@@ -318,6 +330,31 @@ importers:
       vitest:
         specifier: 4.1.12
         version: 4.1.12(@types/node@22.20.5)(vite@8.3.7(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15))
+
+  packages/jobs:
+    dependencies:
+      '@bbn/db':
+        specifier: workspace:*
+        version: link:../db
+      '@bbn/domain':
+        specifier: workspace:*
+        version: link:../domain
+      '@bbn/integrations':
+        specifier: workspace:*
+        version: link:../integrations
+      '@bbn/observability':
+        specifier: workspace:*
+        version: link:../observability
+      pg:
+        specifier: 8.23.1
+        version: 8.23.1
+    devDependencies:
+      '@bbn/billing':
+        specifier: workspace:*
+        version: link:../billing
+      '@types/pg':
+        specifier: 8.23.1
+        version: 8.23.1
 
   packages/media:
     dependencies:

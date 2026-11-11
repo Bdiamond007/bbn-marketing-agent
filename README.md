@@ -2,7 +2,7 @@
 
 Application web multi-entreprises pour préparer, approuver, programmer et publier des contenus sociaux en français et en anglais (marché pilote canadien). Spécification contractuelle : [`SPECIFICATION.md`](SPECIFICATION.md). Avancement : [`docs/execution/status.md`](docs/execution/status.md).
 
-> **État : en construction.** Lots réalisés localement : E00 (contrat/backlog), E01 (monorepo), E02 (simulateurs), E04 (base et isolation). Aucune intégration réelle (Meta, LinkedIn, Stripe, AWS, IA) n'est implémentée ni prouvée ; tout fonctionne avec des **simulateurs déterministes**, clairement étiquetés.
+> **État : en construction.** Lots réalisés localement : E00 (contrat/backlog), E01 (monorepo), E02 (simulateurs), E04 (base et isolation), E05 (authentification, sessions, équipe, droits — API `/api/v1`, sans écrans). Aucune intégration réelle (Meta, LinkedIn, Stripe, AWS, IA) n'est implémentée ni prouvée ; tout fonctionne avec des **simulateurs déterministes**, clairement étiquetés.
 
 ## Prérequis
 
@@ -24,6 +24,8 @@ pnpm db:seed                   # données FICTIVES (organisations A et B)
 pnpm dev                       # http://localhost:3000 → /fr ou /en
 pnpm dev:worker                # worker (simulateurs)
 ```
+
+En mode simulation, les courriels (codes de vérification, liens d'invitation) sont écrits dans le journal du serveur web (`"msg":"simulated_email"`). L'API `/api/v1` exige `DATABASE_URL` et un en-tête `Origin` identique à `APP_BASE_URL` sur les mutations.
 
 Variables chargées depuis l'environnement du shell (exportez celles de `.env`, ou utilisez un outil comme `direnv`). Sans `APP_ENV`, `APP_BASE_URL`, `ADAPTER_MODE`, `AUTH_MODE`, le web et le worker refusent de démarrer.
 

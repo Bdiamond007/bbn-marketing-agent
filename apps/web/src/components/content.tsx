@@ -47,7 +47,7 @@ export function NewContentForm({ organizationId, brandId }: { organizationId: st
   );
 }
 
-function VariantEditor({ organizationId, itemId, variant, media, history, canEdit }: { organizationId: string; itemId: string; variant: VariantView; media: ReadyMedia[]; history: RevisionView[]; canEdit: boolean }) {
+function VariantEditor({ organizationId, variant, media, history, canEdit }: { organizationId: string; variant: VariantView; media: ReadyMedia[]; history: RevisionView[]; canEdit: boolean }) {
   const f = useForm();
   const format = useFormatter();
   const router = useRouter();
@@ -178,7 +178,7 @@ export function ContentEditor({ organizationId, item, media, histories, comments
           </Tabs.List>
           {item.variants.map((v) => (
             <Tabs.Content key={v.id} value={v.id}>
-              <VariantEditor organizationId={organizationId} itemId={item.id} variant={v} media={media} history={histories[v.id] ?? []} canEdit={canEdit} />
+              <VariantEditor organizationId={organizationId} variant={v} media={media} history={histories[v.id] ?? []} canEdit={canEdit} />
             </Tabs.Content>
           ))}
         </Tabs.Root>

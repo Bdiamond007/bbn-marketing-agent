@@ -6,7 +6,7 @@ ORG-01,ST-ORG-01b,team,"Invitation, Membership",POST /api/v1/organizations ; POS
 ORG-01,ST-ORG-01c,—,"Membership, StaffAssignment, SupportGrant",authorize() ; asMember(),packages/domain/src/authz.test.ts,P0,VERIFIED_LOCAL
 BRAND-01,ST-BRAND-01a,brand,"Brand, BrandGuideline",/api/v1/organizations/{id}/brands[/{brandId}[/draft|/publish]],packages/domain/src/brand.test.ts ; packages/brands/src/brands.db.test.ts ; apps/web/e2e/app.spec.ts,P0,VERIFIED_LOCAL
 MEDIA-01,ST-MEDIA-01a,media,MediaAsset,/api/v1/organizations/{id}/media[/uploads|/{assetId}/complete|/{assetId}/url],packages/media/src/media.db.test.ts ; apps/web/e2e/app.spec.ts,P0,VERIFIED_LOCAL
-AI-01,ST-AI-01a,content,"AIJob, ContentItem",POST /api/v1/content-plans/{id}/generate ; job generation,à créer (E13) ; simulateur packages/integrations/src/fakes/ai.ts,P0,NOT_STARTED
+AI-01,ST-AI-01a,content,"AIJob, ContentItem",POST /api/v1/content-plans/{id}/generate ; job generation,packages/ai/src/validate.test.ts ; packages/ai/src/generation.db.test.ts ; apps/web/e2e/app.spec.ts,P0,VERIFIED_LOCAL
 EDIT-01,ST-EDIT-01a,content/editor,"Revision, ContentVariant","/api/v1/organizations/{id}/variants/{variantId}/revisions (+ content-items, variants, comments)",packages/domain/src/editorial.test.ts ; packages/content/src/content.db.test.ts ; apps/web/e2e/app.spec.ts,P0,VERIFIED_LOCAL
 APPROVAL-01,ST-APPROVAL-01a,content/editor,"Approval, Revision",POST /api/v1/variants/{id}/approvals,packages/domain/src/revision-hash.test.ts ; packages/db/src/isolation.db.test.ts (hash/destination),P0,IN_PROGRESS
 CAL-01,ST-CAL-01a,calendar,Publication,POST /api/v1/publications ; GET /api/v1/calendar,à créer (E16),P0,NOT_STARTED

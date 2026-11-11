@@ -116,8 +116,8 @@
   "screen": "content",
   "entity": "AIJob, ContentItem",
   "endpoint": "POST /api/v1/content-plans/{id}/generate ; job generation",
-  "test": "à créer (E13) ; simulateur packages/integrations/src/fakes/ai.ts",
-  "status": "NOT_STARTED"
+  "test": "packages/ai/src/validate.test.ts ; packages/ai/src/generation.db.test.ts ; apps/web/e2e/app.spec.ts",
+  "status": "VERIFIED_LOCAL"
  },
  {
   "req": "EDIT-01",

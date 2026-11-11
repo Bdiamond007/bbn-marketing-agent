@@ -17,8 +17,8 @@ Le succès sur simulateur ne prouve pas une intégration réelle. Dernière mise
 | E09 | Onboarding et profil | VERIFIED_LOCAL | agent de réalisation | 3c08f55 | [rapport](reports/E09_2026-11-11.md) | E05/E06/E08 | Logo associé en E10 |
 | E10 | Médias privés | VERIFIED_LOCAL | agent de réalisation | bd8b57b | [rapport](reports/E10_2026-11-11.md) | E04/E06/E09 | S3 et antivirus réels non implémentés (E23) |
 | E11 | Contenus et révisions | VERIFIED_LOCAL | agent de réalisation | 0e34b39 | [rapport](reports/E11_2026-11-11.md) | E04/E06/E09/E10 | Aperçu par modèle en E14 |
-| E12 | Outbox et workers | NOT_STARTED | — | — | — | E02/E04/E08 | Prochain lot éligible. Consommateur de file de base présent (E02) |
-| E13 | IA et évaluations | NOT_STARTED | — | — | — | E08/E09/E11/E12 | |
+| E12 | Outbox et workers | VERIFIED_LOCAL | agent de réalisation | 4bdf565 | [rapport](reports/E12_2026-11-11.md) | E02/E04/E08 | SQS réel en E23 ; ADR-0006 |
+| E13 | IA et évaluations | NOT_STARTED | — | — | — | E08/E09/E11/E12 | Prochain lot éligible |
 | E14 | Templates et rendu | NOT_STARTED | — | — | — | E10/E11/E12 | |
 | E15 | Approbation et production | NOT_STARTED | — | — | — | E05/E11/E13/E14 | Empreinte de révision + trigger SQL présents (E04) |
 | E16 | Calendrier et programmation | NOT_STARTED | — | — | — | E08/E11/E15 | |

@@ -9,12 +9,12 @@ Format (§19) : contexte, options, décision, conséquences, date, propriétaire
 | [ADR-0003](ADR-0003-isolation-rls-et-contexte.md) | Isolation : RLS forcée, FK composites, contexte transactionnel | Accepté | E04 |
 | [ADR-0004](ADR-0004-migrations-sql-source-de-verite.md) | Migrations SQL source de vérité, Drizzle pour le typage | Accepté | E04 |
 | [ADR-0005](ADR-0005-sessions-et-authentification.md) | Sessions serveur et authentification | Accepté (local ; Cognito à prouver) | E05 |
+| [ADR-0006](ADR-0006-outbox-et-baux.md) | Outbox transactionnelle, baux, consommateurs idempotents | Accepté (local) | E12 |
 
 ## ADR requis restant à rédiger (§19)
 
 | Sujet | Lot de rédaction |
 |---|---|
-| Outbox, leases, sélection inter-tenant (SECURITY DEFINER) | E12 |
 | Hash d'approbation (version du hash, invalidation, déplacement horaire) | E15 |
 | Période acquise et programmation (DST, fuseaux) | E16 |
 | Parcours Meta prouvé | E03/E17 (après spike réel) |

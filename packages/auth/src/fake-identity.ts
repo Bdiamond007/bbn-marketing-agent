@@ -1,4 +1,4 @@
-import { randomBytes, scryptSync, timingSafeEqual, createHash } from "node:crypto";
+import { randomBytes, randomUUID, scryptSync, timingSafeEqual, createHash } from "node:crypto";
 import type { Clock } from "@bbn/domain";
 import { IdentityError, type IdentityProvider, type IdentityUser } from "./identity";
 
@@ -33,7 +33,8 @@ export class FakeIdentityProvider implements IdentityProvider {
     this.n += 1;
     const salt = randomBytes(16);
     const code = this.code();
-    const user: IdentityUser = { subject: `fake-sub-${String(this.n).padStart(4, "0")}`, email: key, emailVerified: false };
+    // Sujet unique et opaque (comme Cognito) : jamais réutilisé entre instances ou redémarrages.
+    const user: IdentityUser = { subject: `fake-sub-${randomUUID()}`, email: key, emailVerified: false };
     this.accounts.set(key, { user, salt, hash: scryptSync(password, salt, 32), verifyCodeHash: h(code), recovery: null });
     this.outbox.push({ email: key, kind: "verify", code });
     return { user: { ...user }, verificationCode: code };
@@ -56,10 +57,11 @@ export class FakeIdentityProvider implements IdentityProvider {
   async startRecovery(email: string) {
     const key = email.trim().toLowerCase();
     const a = this.accounts.get(key);
-    if (!a) return;
+    if (!a) return {};
     const code = this.code();
     a.recovery = { codeHash: h(code), expiresAt: this.clock.now().getTime() + CODE_TTL_MS };
     this.outbox.push({ email: key, kind: "recovery", code });
+    return { deliveryCode: code };
   }
 
   async completeRecovery(email: string, code: string, newPassword: string) {
@@ -73,6 +75,11 @@ export class FakeIdentityProvider implements IdentityProvider {
     a.recovery = null; // usage unique
     a.salt = randomBytes(16);
     a.hash = scryptSync(newPassword, a.salt, 32);
+    return { subject: a.user.subject };
+  }
+
+  async verifyMfa(subject: string, code: string): Promise<boolean> {
+    return code === fakeMfaCode(subject);
   }
 
   private code(): string {
@@ -80,4 +87,9 @@ export class FakeIdentityProvider implements IdentityProvider {
     this.n += 1;
     return String(100000 + ((this.n * 7919) % 900000));
   }
+}
+
+/** Code MFA simulé, déterministe par sujet (AUTH_MODE=fake uniquement). */
+export function fakeMfaCode(subject: string): string {
+  return String(100000 + (parseInt(h(`mfa:${subject}`).slice(0, 8), 16) % 900000));
 }

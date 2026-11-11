@@ -1,4 +1,18 @@
 {
   "approvalRequested": "Un contenu attend votre approbation.",
-  "reminder72h": "Rappel : un contenu programmé attend toujours votre approbation."
+  "reminder72h": "Rappel : un contenu programmé attend toujours votre approbation.",
+  "emails": {
+    "verifyEmail": {
+      "subject": "Votre code de vérification",
+      "body": "Votre code de vérification est {code}. Il expire dans 15 minutes."
+    },
+    "recovery": {
+      "subject": "Récupération de votre accès",
+      "body": "Votre code de récupération est {code}. Il expire dans 15 minutes. Si vous n'avez rien demandé, ignorez ce message."
+    },
+    "invitation": {
+      "subject": "Invitation à rejoindre {organization}",
+      "body": "Vous êtes invité·e à rejoindre {organization}. Ce lien expire dans 7 jours : {link}"
+    }
+  }
 }

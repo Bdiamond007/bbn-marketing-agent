@@ -21,7 +21,7 @@ export default defineConfig({
       {
         test: {
           name: "db",
-          include: ["packages/*/src/**/*.db.test.ts"],
+          include: ["packages/*/src/**/*.db.test.ts", "apps/*/src/**/*.db.test.ts"],
           environment: "node",
           globalSetup: ["packages/test-utils/src/db-global-setup.ts"],
           fileParallelism: false,

@@ -1,5 +1,5 @@
 // GÉNÉRÉ par scripts/introspect.sh (drizzle-kit pull + postprocess-schema) — ne pas éditer à la main.
-import { pgTable, unique, uuid, text, timestamp, integer, index, jsonb, date, uniqueIndex, boolean, bigint, numeric, primaryKey } from "drizzle-orm/pg-core"
+import { pgTable, unique, uuid, text, timestamp, integer, index, uniqueIndex, jsonb, date, boolean, bigint, numeric, primaryKey } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
@@ -40,6 +40,7 @@ export const invitations = pgTable("invitations", {
 	revokedAt: timestamp("revoked_at", { withTimezone: true, mode: 'string' }),
 }, (table) => [
 	index("invitations_org_idx").using("btree", table.organizationId.asc().nullsLast().op("timestamptz_ops"), table.createdAt.asc().nullsLast().op("timestamptz_ops")),
+	uniqueIndex("invitations_pending_uq").using("btree", table.organizationId.asc().nullsLast().op("text_ops"), table.email.asc().nullsLast().op("uuid_ops")).where(sql`((accepted_at IS NULL) AND (revoked_at IS NULL))`),
 	unique("invitations_token_hash_key").on(table.tokenHash),
 ]);
 
@@ -377,20 +378,6 @@ export const privacyRequests = pgTable("privacy_requests", {
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 }, );
 
-export const users = pgTable("users", {
-	id: uuid().defaultRandom().primaryKey().notNull(),
-	authSubject: text("auth_subject").notNull(),
-	email: text().notNull(),
-	emailVerifiedAt: timestamp("email_verified_at", { withTimezone: true, mode: 'string' }),
-	uiLocale: text("ui_locale").notNull(),
-	status: text().default('active').notNull(),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-}, (table) => [
-	uniqueIndex("users_email_active_uq").using("btree", table.email.asc().nullsLast().op("text_ops")).where(sql`(status <> 'deleted'::text)`),
-	unique("users_auth_subject_key").on(table.authSubject),
-]);
-
 export const revisions = pgTable("revisions", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
 	organizationId: uuid("organization_id").notNull(),
@@ -451,6 +438,39 @@ export const auditEvents = pgTable("audit_events", {
 	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 }, (table) => [
 	index("audit_events_org_date_idx").using("btree", table.organizationId.asc().nullsLast().op("timestamptz_ops"), table.createdAt.asc().nullsLast().op("timestamptz_ops")),
+]);
+
+export const users = pgTable("users", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	authSubject: text("auth_subject").notNull(),
+	email: text().notNull(),
+	emailVerifiedAt: timestamp("email_verified_at", { withTimezone: true, mode: 'string' }),
+	uiLocale: text("ui_locale").notNull(),
+	status: text().default('active').notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	platformRole: text("platform_role"),
+}, (table) => [
+	uniqueIndex("users_email_active_uq").using("btree", table.email.asc().nullsLast().op("text_ops")).where(sql`(status <> 'deleted'::text)`),
+	unique("users_auth_subject_key").on(table.authSubject),
+]);
+
+export const sessions = pgTable("sessions", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	tokenHash: text("token_hash").notNull(),
+	userId: uuid("user_id").notNull(),
+	privileged: boolean().default(false).notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	lastSeenAt: timestamp("last_seen_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	idleExpiresAt: timestamp("idle_expires_at", { withTimezone: true, mode: 'string' }).notNull(),
+	expiresAt: timestamp("expires_at", { withTimezone: true, mode: 'string' }).notNull(),
+	mfaVerifiedAt: timestamp("mfa_verified_at", { withTimezone: true, mode: 'string' }),
+	reauthenticatedAt: timestamp("reauthenticated_at", { withTimezone: true, mode: 'string' }),
+	revokedAt: timestamp("revoked_at", { withTimezone: true, mode: 'string' }),
+	revokedReason: text("revoked_reason"),
+}, (table) => [
+	index("sessions_user_idx").using("btree", table.userId.asc().nullsLast().op("uuid_ops")).where(sql`(revoked_at IS NULL)`),
+	unique("sessions_token_hash_key").on(table.tokenHash),
 ]);
 
 export const memberships = pgTable("memberships", {

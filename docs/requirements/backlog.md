@@ -7,10 +7,11 @@ Exigences P0 : 18 — toutes reliées à au moins une story : **oui**.
 
 | Exigence | Prio | Story | Lot | Rôle | Titre | Critère Given/When/Then (principal) | Statut |
 |---|---|---|---|---|---|---|---|
-| AUTH-01 | P0 | ST-AUTH-01a | E05 | Visiteur | Inscription, vérification courriel et connexion | Given un courriel non vérifié When l'utilisateur tente une connexion OAuth réelle Then refus avec message localisé | IN_PROGRESS |
-| AUTH-01 | P0 | ST-AUTH-01b | E05 | Utilisateur | Récupération d'accès à usage unique | Given un code de récupération utilisé When il est réutilisé Then refus invalid_code | IN_PROGRESS |
+| AUTH-01 | P0 | ST-AUTH-01a | E05 | Visiteur | Inscription, vérification courriel et connexion | Given un courriel non vérifié When l'utilisateur tente une connexion OAuth réelle Then refus avec message localisé | VERIFIED_LOCAL |
+| AUTH-01 | P0 | ST-AUTH-01b | E05 | Utilisateur | Récupération d'accès à usage unique | Given un code de récupération utilisé When il est réutilisé Then refus invalid_code | VERIFIED_LOCAL |
 | ORG-01 | P0 | ST-ORG-01a | E04 | Système | Isolation multi-tenant en base (RLS, FK composites, contexte transactionnel) | Given le contexte de A When A lit ou référence un objet de B Then 0 ligne ou violation de contrainte | VERIFIED_LOCAL |
-| ORG-01 | P0 | ST-ORG-01b | E05 | Propriétaire | Invitations expirantes, révocation et transfert de propriété | Given un seul propriétaire When il se rétrograde Then refus last_owner_protected | IN_PROGRESS |
+| ORG-01 | P0 | ST-ORG-01b | E05 | Propriétaire | Invitations expirantes, révocation et transfert de propriété | Given un seul propriétaire When il se rétrograde Then refus last_owner_protected | VERIFIED_LOCAL |
+| ORG-01 | P0 | ST-ORG-01c | E05 | Système | Moteur de droits serveur (rôles client et internes, MFA privilégiée) | Given un producteur sans affectation valide When il modifie un contenu Then refus assignment_missing | VERIFIED_LOCAL |
 | BRAND-01 | P0 | ST-BRAND-01a | E09 | Propriétaire | Profil de marque versionné et faits datés | Given un champ requis manquant When une génération est demandée Then 422 brand_incomplete | NOT_STARTED |
 | MEDIA-01 | P0 | ST-MEDIA-01a | E10 | Éditeur | Téléversement privé, quarantaine et validation du contenu réel | Given un fichier au faux MIME When il est complété Then rejeté et non publiable | NOT_STARTED |
 | AI-01 | P0 | ST-AI-01a | E13 | Éditeur | Génération FR/EN structurée, faits référencés, sans débit indu | Given une panne IA When le job échoue sans résultat exploitable Then la réservation de contenu est libérée | NOT_STARTED |

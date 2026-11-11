@@ -3,5 +3,26 @@
   "notFound": "Page introuvable.",
   "rateLimited": "Trop de demandes. Réessayez dans quelques instants.",
   "conflict": "Conflit de version.",
-  "missingTranslation": "Texte indisponible."
+  "missingTranslation": "Texte indisponible.",
+  "codes": {
+    "validation_failed": "Certaines informations sont invalides.",
+    "unauthenticated": "Connectez-vous pour continuer.",
+    "invalid_credentials": "Courriel ou mot de passe incorrect.",
+    "session_invalid": "Votre session a expiré. Reconnectez-vous.",
+    "reauth_required": "Confirmez votre mot de passe pour continuer.",
+    "mfa_required": "Validez votre code d'authentification à deux facteurs.",
+    "forbidden": "Vous n'avez pas l'autorisation d'effectuer cette action.",
+    "email_not_verified": "Vérifiez votre adresse courriel avant de continuer.",
+    "origin_rejected": "Requête refusée.",
+    "not_found": "Élément introuvable.",
+    "conflict": "Cette action entre en conflit avec l'état actuel.",
+    "stale_version": "Cette version a été modifiée entre-temps.",
+    "business_rule": "Cette action n'est pas permise.",
+    "last_owner_protected": "L'organisation doit conserver au moins un propriétaire.",
+    "invitation_invalid": "Cette invitation n'est pas valide.",
+    "invitation_expired": "Cette invitation a expiré.",
+    "invitation_email_mismatch": "Cette invitation a été envoyée à une autre adresse courriel.",
+    "rate_limited": "Trop de tentatives. Réessayez plus tard.",
+    "not_implemented": "Fonctionnalité non disponible."
+  }
 }

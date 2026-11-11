@@ -35,12 +35,27 @@ importers:
 
   apps/web:
     dependencies:
+      '@bbn/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@bbn/config':
         specifier: workspace:*
         version: link:../../packages/config
+      '@bbn/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@bbn/domain':
+        specifier: workspace:*
+        version: link:../../packages/domain
       '@bbn/i18n':
         specifier: workspace:*
         version: link:../../packages/i18n
+      '@bbn/integrations':
+        specifier: workspace:*
+        version: link:../../packages/integrations
+      '@bbn/observability':
+        specifier: workspace:*
+        version: link:../../packages/observability
       '@bbn/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -50,16 +65,25 @@ importers:
       next-intl:
         specifier: 4.14.10
         version: 4.14.10(@swc/helpers@0.5.23)(@types/react@19.3.0)(next@16.4.6(@playwright/test@1.63.0)(@types/node@22.20.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
+      pg:
+        specifier: 8.23.1
+        version: 8.23.1
       react:
         specifier: 19.3.1
         version: 19.3.1
       react-dom:
         specifier: 19.3.1
         version: 19.3.1(react@19.3.1)
+      zod:
+        specifier: 4.6.7
+        version: 4.6.7
     devDependencies:
       '@playwright/test':
         specifier: 1.63.0
         version: 1.63.0
+      '@types/pg':
+        specifier: 8.23.1
+        version: 8.23.1
       '@types/react':
         specifier: 19.3.0
         version: 19.3.0
@@ -94,9 +118,28 @@ importers:
 
   packages/auth:
     dependencies:
+      '@bbn/config':
+        specifier: workspace:*
+        version: link:../config
+      '@bbn/db':
+        specifier: workspace:*
+        version: link:../db
       '@bbn/domain':
         specifier: workspace:*
         version: link:../domain
+      '@bbn/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@bbn/integrations':
+        specifier: workspace:*
+        version: link:../integrations
+      pg:
+        specifier: 8.23.1
+        version: 8.23.1
+    devDependencies:
+      '@types/pg':
+        specifier: 8.23.1
+        version: 8.23.1
 
   packages/config:
     dependencies:

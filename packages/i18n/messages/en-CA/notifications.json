@@ -1,4 +1,18 @@
 {
   "approvalRequested": "A post is waiting for your approval.",
-  "reminder72h": "Reminder: a scheduled post is still waiting for your approval."
+  "reminder72h": "Reminder: a scheduled post is still waiting for your approval.",
+  "emails": {
+    "verifyEmail": {
+      "subject": "Your verification code",
+      "body": "Your verification code is {code}. It expires in 15 minutes."
+    },
+    "recovery": {
+      "subject": "Recover your access",
+      "body": "Your recovery code is {code}. It expires in 15 minutes. If you did not ask for this, ignore this message."
+    },
+    "invitation": {
+      "subject": "Invitation to join {organization}",
+      "body": "You have been invited to join {organization}. This link expires in 7 days: {link}"
+    }
+  }
 }

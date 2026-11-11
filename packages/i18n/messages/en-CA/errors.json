@@ -3,5 +3,26 @@
   "notFound": "Page not found.",
   "rateLimited": "Too many requests. Try again in a moment.",
   "conflict": "Version conflict.",
-  "missingTranslation": "Text unavailable."
+  "missingTranslation": "Text unavailable.",
+  "codes": {
+    "validation_failed": "Some information is invalid.",
+    "unauthenticated": "Sign in to continue.",
+    "invalid_credentials": "Incorrect email or password.",
+    "session_invalid": "Your session has expired. Sign in again.",
+    "reauth_required": "Confirm your password to continue.",
+    "mfa_required": "Enter your two-factor authentication code.",
+    "forbidden": "You are not allowed to perform this action.",
+    "email_not_verified": "Verify your email address before continuing.",
+    "origin_rejected": "Request rejected.",
+    "not_found": "Item not found.",
+    "conflict": "This action conflicts with the current state.",
+    "stale_version": "This version was changed in the meantime.",
+    "business_rule": "This action is not allowed.",
+    "last_owner_protected": "The organization must keep at least one owner.",
+    "invitation_invalid": "This invitation is not valid.",
+    "invitation_expired": "This invitation has expired.",
+    "invitation_email_mismatch": "This invitation was sent to a different email address.",
+    "rate_limited": "Too many attempts. Try again later.",
+    "not_implemented": "Feature not available."
+  }
 }

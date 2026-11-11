@@ -20,10 +20,16 @@ export class IdentityError extends Error {
 }
 
 export interface IdentityProvider {
-  signUp(email: string, password: string): Promise<{ user: IdentityUser; verificationCode: string }>;
+  /** `verificationCode` n'est renvoyé que si l'envoi du code nous incombe (simulateur). */
+  signUp(email: string, password: string): Promise<{ user: IdentityUser; verificationCode?: string }>;
   verifyEmail(email: string, code: string): Promise<IdentityUser>;
   signIn(email: string, password: string): Promise<IdentityUser>;
-  /** Toujours la même réponse que le compte existe ou non (pas d'énumération). */
-  startRecovery(email: string): Promise<void>;
-  completeRecovery(email: string, code: string, newPassword: string): Promise<void>;
+  /**
+   * Toujours la même réponse visible que le compte existe ou non (pas d'énumération).
+   * `deliveryCode` n'est renvoyé que si l'envoi du code nous incombe (simulateur) ; Cognito l'envoie lui-même.
+   */
+  startRecovery(email: string): Promise<{ deliveryCode?: string }>;
+  completeRecovery(email: string, code: string, newPassword: string): Promise<{ subject: string }>;
+  /** Vérifie un code MFA (TOTP) pour le sujet ; requis pour toute session privilégiée. */
+  verifyMfa(subject: string, code: string): Promise<boolean>;
 }

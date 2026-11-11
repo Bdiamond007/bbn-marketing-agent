@@ -130,9 +130,9 @@
   "gwt": "Given expectedVersion obsolète When une révision est enregistrée Then 409",
   "screen": "content/editor",
   "entity": "Revision, ContentVariant",
-  "endpoint": "POST /api/v1/variants/{id}/revisions",
-  "test": "packages/db/src/isolation.db.test.ts (immuabilité SQL) ; à compléter E11",
-  "status": "IN_PROGRESS"
+  "endpoint": "/api/v1/organizations/{id}/variants/{variantId}/revisions (+ content-items, variants, comments)",
+  "test": "packages/domain/src/editorial.test.ts ; packages/content/src/content.db.test.ts ; apps/web/e2e/app.spec.ts",
+  "status": "VERIFIED_LOCAL"
  },
  {
   "req": "APPROVAL-01",

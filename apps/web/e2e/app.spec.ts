@@ -138,7 +138,7 @@ test("sections non livrées : état vide honnête, sans donnée inventée", asyn
   const email = uniqEmail("empty");
   await signUpAndVerify(page, email);
   await signIn(page, email);
-  for (const s of ["calendar", "content", "reports"]) {
+  for (const s of ["calendar", "accounts", "reports"]) {
     await page.goto(`/fr/app/${s}`);
     await expect(page.getByRole("heading", { name: "Section pas encore disponible" })).toBeVisible();
   }
@@ -283,4 +283,67 @@ test("médias : image réelle vérifiée et affichée par URL signée ; faux typ
 
   await page.goto("/fr/app");
   await expect(page.getByRole("listitem").filter({ hasText: "Ajouter des médias" }).getByText("Fait")).toBeVisible();
+});
+
+test("contenus : sujet, variantes FR et EN séparées, versions et historique, soumission, commentaire", async ({ page }) => {
+  const email = uniqEmail("content");
+  await signUpAndVerify(page, email);
+  await signIn(page, email);
+  await page.goto("/fr/app/organizations/new");
+  await page.getByLabel("Nom de l'organisation").fill("Café Contenus (fictif)");
+  await page.getByRole("button", { name: "Créer" }).click();
+  await expect(page).toHaveURL(/\/fr\/app$/);
+  // Abonnement simulé (crédit de contenu) puis marque.
+  await page.goto("/fr/app/billing");
+  await page.locator("section").filter({ has: page.getByRole("heading", { name: "Essentiel", level: 3 }) }).last().getByRole("button", { name: "Choisir ce plan" }).click();
+  await page.getByRole("button", { name: "Simuler un paiement réussi" }).click();
+  await expect(page.getByRole("heading", { name: "Plan actuel : Essentiel" })).toBeVisible();
+  await page.goto("/fr/app/brand");
+  await page.getByLabel("Nom de la marque").fill("Café Démo (fictif)");
+  await page.getByRole("button", { name: "Créer la marque" }).click();
+  await expect(page.getByText("Profil non publié")).toBeVisible();
+
+  await page.goto("/fr/app/content");
+  await page.getByLabel("Sujet").fill("Menu du temps des fêtes");
+  await page.getByRole("button", { name: "Créer le contenu" }).click();
+  await expect(page).toHaveURL(/\/fr\/app\/content\/[0-9a-f-]{36}$/);
+  await expect(page.getByRole("heading", { name: "Menu du temps des fêtes" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Ajouter", exact: true }).click();
+  const frTab = page.getByRole("tab", { name: "Page Facebook — Français" });
+  await expect(frTab).toHaveAttribute("aria-selected", "true");
+  await page.getByLabel("Texte de la publication").fill("Notre menu des fêtes arrive bientôt.");
+  await page.getByRole("button", { name: "Enregistrer une nouvelle version" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Version 1 enregistrée." })).toBeVisible();
+  await page.getByLabel("Texte de la publication").fill("Notre menu des fêtes arrive le 1er décembre.");
+  await page.getByRole("button", { name: "Enregistrer une nouvelle version" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Version 2 enregistrée." })).toBeVisible();
+  const history = page.getByRole("tabpanel").getByRole("listitem");
+  await expect(history).toHaveCount(2);
+  await expect(history.first()).toContainText("Version 2");
+  await expect(history.last()).toContainText("Notre menu des fêtes arrive bientôt.");
+  await expectNoA11yViolations(page);
+
+  // Variante anglaise : contenu séparé, onglet distinct.
+  await page.getByRole("combobox", { name: "Langue", exact: true }).selectOption("en-CA");
+  await page.getByRole("button", { name: "Ajouter", exact: true }).click();
+  await page.getByRole("tab", { name: "Page Facebook — Anglais" }).click();
+  await expect(page.getByLabel("Texte de la publication")).toHaveValue("");
+  await page.getByLabel("Texte de la publication").fill("Our holiday menu arrives December 1.");
+  await page.getByRole("button", { name: "Enregistrer une nouvelle version" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Version 1 enregistrée." })).toBeVisible();
+  await frTab.click();
+  await expect(page.getByLabel("Texte de la publication")).toHaveValue("Notre menu des fêtes arrive le 1er décembre.");
+
+  await page.getByRole("button", { name: "Soumettre pour approbation" }).click();
+  await expect(page.getByRole("tabpanel").getByText("En attente d'approbation")).toBeVisible();
+
+  await page.getByLabel("Votre commentaire").fill("Ajouter le prix ?");
+  await page.getByRole("button", { name: "Commenter" }).click();
+  await expect(page.getByText("Ajouter le prix ?")).toBeVisible();
+  await expectNoA11yViolations(page);
+
+  await page.goto("/fr/app/content");
+  await expect(page.getByRole("link", { name: "Menu du temps des fêtes" })).toBeVisible();
+  await expect(page.getByText("2 variantes")).toBeVisible();
 });

@@ -2,5 +2,83 @@
   "approveVersion": "Approuver cette version",
   "requestChanges": "Demander des modifications",
   "versionLabel": "Version {number}",
-  "staleVersion": "Cette version a été modifiée par quelqu'un d'autre. Rechargez avant de continuer."
+  "staleVersion": "Cette version a été modifiée par quelqu'un d'autre. Rechargez avant de continuer.",
+  "title": "Contenus",
+  "lead": "Sujets, versions par langue et réseau, et historique.",
+  "noBrand": "Créez et publiez d'abord le profil de marque.",
+  "empty": "Aucun contenu pour l'instant.",
+  "new": {
+    "title": "Nouveau contenu",
+    "topic": "Sujet",
+    "topicHint": "Par exemple : horaires des fêtes, nouveau service.",
+    "submit": "Créer le contenu"
+  },
+  "list": {
+    "topic": "Sujet",
+    "status": "État",
+    "variants": "{count, plural, =0 {Aucune variante} one {# variante} other {# variantes}}",
+    "open": "Ouvrir"
+  },
+  "states": {
+    "draft": "Brouillon",
+    "generating": "Génération en cours",
+    "internal_review": "Revue interne",
+    "pending_customer_review": "En attente d'approbation",
+    "changes_requested": "Corrections demandées",
+    "approved": "Approuvé",
+    "archived": "Archivé"
+  },
+  "providers": {
+    "facebook_page": "Page Facebook",
+    "instagram_business": "Instagram professionnel",
+    "linkedin_page": "Page LinkedIn"
+  },
+  "locales": {
+    "fr-CA": "Français",
+    "en-CA": "Anglais"
+  },
+  "variantTab": "{provider} — {locale}",
+  "variantsLabel": "Variantes par langue et réseau",
+  "addVariant": {
+    "title": "Ajouter une variante",
+    "provider": "Réseau",
+    "locale": "Langue",
+    "submit": "Ajouter"
+  },
+  "editor": {
+    "caption": "Texte de la publication",
+    "captionCount": "{count, plural, one {# caractère} other {# caractères}}",
+    "media": "Images",
+    "noMedia": "Aucune image prête. Ajoutez-en dans Médias.",
+    "mediaAlt": "Image {number}",
+    "save": "Enregistrer une nouvelle version",
+    "saved": "Version {number} enregistrée.",
+    "submit": "Soumettre pour approbation",
+    "submitted": "Soumis.",
+    "archive": "Archiver",
+    "restore": "Restaurer",
+    "noRevision": "Aucune version pour l'instant.",
+    "current": "Version actuelle : {number}",
+    "previewTitle": "Aperçu",
+    "previewNote": "Aperçu indicatif ; le rendu final dépend du réseau.",
+    "destination": "Destination : {provider}, {locale}"
+  },
+  "history": {
+    "title": "Historique",
+    "entry": "Version {number}",
+    "origin": {
+      "manual": "Saisie manuelle",
+      "ai": "Proposition IA",
+      "import": "Importée"
+    }
+  },
+  "comments": {
+    "title": "Commentaires",
+    "empty": "Aucun commentaire.",
+    "body": "Votre commentaire",
+    "submit": "Commenter",
+    "added": "Commentaire ajouté.",
+    "onVersion": "Sur la version {number}",
+    "unknownAuthor": "Membre retiré"
+  }
 }

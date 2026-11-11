@@ -46,6 +46,9 @@
     "too_large": "Fichier trop volumineux (20 Mo maximum).",
     "upload_missing": "Le fichier n'a pas été reçu. Réessayez le téléversement.",
     "media_not_publishable": "Un média n'est pas prêt ou n'a pas de déclaration de droits.",
-    "media_not_in_quarantine": "Ce média a déjà été traité."
+    "media_not_in_quarantine": "Ce média a déjà été traité.",
+    "variant_exists": "Cette variante existe déjà.",
+    "invalid_transition": "Cette action n'est pas possible dans l'état actuel.",
+    "no_revision": "Enregistrez d'abord une version."
   }
 }

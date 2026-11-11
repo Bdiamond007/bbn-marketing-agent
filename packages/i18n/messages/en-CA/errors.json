@@ -46,6 +46,9 @@
     "too_large": "File too large (20 MB maximum).",
     "upload_missing": "The file was not received. Try uploading again.",
     "media_not_publishable": "A media item is not ready or has no rights declaration.",
-    "media_not_in_quarantine": "This media item has already been processed."
+    "media_not_in_quarantine": "This media item has already been processed.",
+    "variant_exists": "This variant already exists.",
+    "invalid_transition": "This action is not possible in the current state.",
+    "no_revision": "Save a version first."
   }
 }

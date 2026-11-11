@@ -2,5 +2,83 @@
   "approveVersion": "Approve this version",
   "requestChanges": "Request changes",
   "versionLabel": "Version {number}",
-  "staleVersion": "This version was changed by someone else. Reload before continuing."
+  "staleVersion": "This version was changed by someone else. Reload before continuing.",
+  "title": "Content",
+  "lead": "Topics, versions per language and network, and history.",
+  "noBrand": "First create and publish the brand profile.",
+  "empty": "No content yet.",
+  "new": {
+    "title": "New content",
+    "topic": "Topic",
+    "topicHint": "For example: holiday hours, new service.",
+    "submit": "Create content"
+  },
+  "list": {
+    "topic": "Topic",
+    "status": "Status",
+    "variants": "{count, plural, =0 {No variants} one {# variant} other {# variants}}",
+    "open": "Open"
+  },
+  "states": {
+    "draft": "Draft",
+    "generating": "Generating",
+    "internal_review": "Internal review",
+    "pending_customer_review": "Awaiting approval",
+    "changes_requested": "Changes requested",
+    "approved": "Approved",
+    "archived": "Archived"
+  },
+  "providers": {
+    "facebook_page": "Facebook Page",
+    "instagram_business": "Instagram professional",
+    "linkedin_page": "LinkedIn Page"
+  },
+  "locales": {
+    "fr-CA": "French",
+    "en-CA": "English"
+  },
+  "variantTab": "{provider} — {locale}",
+  "variantsLabel": "Variants by language and network",
+  "addVariant": {
+    "title": "Add a variant",
+    "provider": "Network",
+    "locale": "Language",
+    "submit": "Add"
+  },
+  "editor": {
+    "caption": "Post text",
+    "captionCount": "{count, plural, one {# character} other {# characters}}",
+    "media": "Images",
+    "noMedia": "No ready images. Add some in Media.",
+    "mediaAlt": "Image {number}",
+    "save": "Save a new version",
+    "saved": "Version {number} saved.",
+    "submit": "Submit for approval",
+    "submitted": "Submitted.",
+    "archive": "Archive",
+    "restore": "Restore",
+    "noRevision": "No version yet.",
+    "current": "Current version: {number}",
+    "previewTitle": "Preview",
+    "previewNote": "Indicative preview; the final rendering depends on the network.",
+    "destination": "Destination: {provider}, {locale}"
+  },
+  "history": {
+    "title": "History",
+    "entry": "Version {number}",
+    "origin": {
+      "manual": "Manual entry",
+      "ai": "AI proposal",
+      "import": "Imported"
+    }
+  },
+  "comments": {
+    "title": "Comments",
+    "empty": "No comments.",
+    "body": "Your comment",
+    "submit": "Comment",
+    "added": "Comment added.",
+    "onVersion": "On version {number}",
+    "unknownAuthor": "Removed member"
+  }
 }

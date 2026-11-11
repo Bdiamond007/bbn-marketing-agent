@@ -8,6 +8,7 @@ import * as Auth from "@bbn/auth";
 import * as Billing from "@bbn/billing";
 import * as Brands from "@bbn/brands";
 import * as Media from "@bbn/media";
+import * as Content from "@bbn/content";
 import { isSimulatedPayments, isSimulatedStorage } from "@bbn/integrations/fakes";
 import { ServiceError, type Clock } from "@bbn/domain";
 import { assertSameOrigin, clearSessionCookie, cookieName, errorResponse, json, locale, memberRole, parseBody, readCookie, requestContext, sessionCookie, uuid, type RequestContext } from "./http";
@@ -256,6 +257,74 @@ const handlers = {
   "media.viewUrl": async (req, deps, ctx, p) => {
     const s = await requireSession(req, deps);
     return json(await Media.mediaViewUrl(deps, s, param(p, "id"), param(p, "assetId")), 200, ctx);
+  },
+  "plans.list": async (req, deps, ctx, p) => {
+    const s = await requireSession(req, deps);
+    return json({ data: await Content.listPlans(deps, s, param(p, "id"), param(p, "brandId")) }, 200, ctx);
+  },
+  "plans.create": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ periodStart: z.string().max(10), periodEnd: z.string().max(10) }));
+    return json(await Content.createPlan(deps, s, param(p, "id"), param(p, "brandId"), b, ctx), 201, ctx);
+  },
+  "items.listByBrand": async (req, deps, ctx, p) => {
+    const s = await requireSession(req, deps);
+    return json({ data: await Content.listItems(deps, s, param(p, "id"), param(p, "brandId")) }, 200, ctx);
+  },
+  "items.createForBrand": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ topic: z.string().min(1).max(500) }));
+    return json(await Content.createItemForBrand(deps, s, param(p, "id"), param(p, "brandId"), b.topic, ctx), 201, ctx);
+  },
+  "items.create": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ topic: z.string().min(1).max(500), sourceFactIds: z.array(z.string().max(40)).max(50).optional() }));
+    return json(await Content.createItem(deps, s, param(p, "id"), param(p, "planId"), b, ctx), 201, ctx);
+  },
+  "items.get": async (req, deps, ctx, p) => {
+    const s = await requireSession(req, deps);
+    return json(await Content.getItem(deps, s, param(p, "id"), param(p, "itemId")), 200, ctx);
+  },
+  "items.update": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ topic: z.string().min(1).max(500), expectedVersion: z.number().int().nonnegative() }));
+    return json(await Content.updateItemTopic(deps, s, param(p, "id"), param(p, "itemId"), b.topic, b.expectedVersion, ctx), 200, ctx);
+  },
+  "variants.create": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ provider: z.enum(["facebook_page", "instagram_business", "linkedin_page"]), locale }));
+    return json(await Content.addVariant(deps, s, param(p, "id"), param(p, "itemId"), b, ctx), 201, ctx);
+  },
+  "revisions.list": async (req, deps, ctx, p) => {
+    const s = await requireSession(req, deps);
+    return json({ data: await Content.listRevisions(deps, s, param(p, "id"), param(p, "variantId")) }, 200, ctx);
+  },
+  "revisions.create": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ caption: z.string().max(5000), mediaAssetIds: z.array(uuid).max(10), expectedVersion: z.number().int().nonnegative() }));
+    return json(await Content.createRevision(deps, s, param(p, "id"), param(p, "variantId"), b, ctx), 201, ctx);
+  },
+  "variants.event": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ event: z.enum(["submit", "archive", "restore"]), expectedVersion: z.number().int().nonnegative() }));
+    return json(await Content.applyVariantEvent(deps, s, param(p, "id"), param(p, "variantId"), b.event, b.expectedVersion, ctx), 200, ctx);
+  },
+  "comments.list": async (req, deps, ctx, p) => {
+    const s = await requireSession(req, deps);
+    return json({ data: await Content.listComments(deps, s, param(p, "id"), param(p, "itemId")) }, 200, ctx);
+  },
+  "comments.create": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ body: z.string().min(1).max(5000), revisionId: uuid.optional() }));
+    return json(await Content.addComment(deps, s, param(p, "id"), param(p, "itemId"), b, ctx), 201, ctx);
   },
   /** Mode simulation uniquement : stockage simulé en mémoire, accessible par URL signée vérifiée et expirante. */
   "dev.storagePut": async (req, deps, ctx) => {

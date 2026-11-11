@@ -235,9 +235,9 @@
   "gwt": "Given une page de succès Checkout sans webhook When le tableau de bord se charge Then aucun droit accordé",
   "screen": "billing",
   "entity": "Subscription, WebhookEvent",
-  "endpoint": "POST /api/v1/webhooks/stripe",
-  "test": "packages/integrations/src/contracts/payments.ts ; à compléter E07",
-  "status": "NOT_STARTED"
+  "endpoint": "POST /api/v1/webhooks/stripe ; /api/v1/organizations/{id}/billing/*",
+  "test": "packages/billing/src/billing.db.test.ts ; apps/web/src/server/api.db.test.ts ; apps/web/e2e/app.spec.ts",
+  "status": "VERIFIED_LOCAL"
  },
  {
   "req": "QUOTA-01",

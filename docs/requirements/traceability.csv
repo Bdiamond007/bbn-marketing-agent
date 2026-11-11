@@ -14,7 +14,7 @@ SOC-01,ST-SOC-01a,—,CapabilityManifest,docs/integrations/manifests,preuve expu
 SOC-01,ST-SOC-01b,accounts,SocialConnection,POST /api/v1/social-connections/{provider}/authorize ; GET …/callback,packages/integrations/src/fakes.test.ts (OAuth simulé) ; contrats live E17,P0,NOT_STARTED
 PUB-01,ST-PUB-01a,reports,"Publication, PublishingAttempt",job publishing,à créer (E18) ; contrat packages/integrations/src/contracts/social.ts,P0,NOT_STARTED
 PUB-02,ST-PUB-02a,reports,PublishingAttempt,job publishing / reconcile,packages/integrations/src/fakes.test.ts (doublon détectable) ; à compléter E18,P0,NOT_STARTED
-BILL-01,ST-BILL-01a,billing,"Subscription, WebhookEvent",POST /api/v1/webhooks/stripe,packages/integrations/src/contracts/payments.ts ; à compléter E07,P0,NOT_STARTED
+BILL-01,ST-BILL-01a,billing,"Subscription, WebhookEvent",POST /api/v1/webhooks/stripe ; /api/v1/organizations/{id}/billing/*,packages/billing/src/billing.db.test.ts ; apps/web/src/server/api.db.test.ts ; apps/web/e2e/app.spec.ts,P0,VERIFIED_LOCAL
 QUOTA-01,ST-QUOTA-01a,billing / tableau de bord,"UsageReservation, UsageLedger",service entitlements,"packages/db/src/isolation.db.test.ts (append-only, dédoublonnage) ; à compléter E08",P0,NOT_STARTED
 NOTIF-01,ST-NOTIF-01a,notifications,Notification,job notifications ; GET /api/v1/notifications,packages/db/src/isolation.db.test.ts (destinataire membre) ; packages/integrations/src/contracts/email.ts,P0,NOT_STARTED
 OPS-01,ST-OPS-01a,admin/production,StaffAssignment,console interne,à créer (E20),P0,NOT_STARTED

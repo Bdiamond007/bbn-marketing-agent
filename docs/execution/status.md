@@ -12,8 +12,8 @@ Le succès sur simulateur ne prouve pas une intégration réelle. Dernière mise
 | E04 | Base, migrations et isolation | VERIFIED_LOCAL | agent de réalisation | 2304bc7 | [rapport](reports/E04_2026-11-11.md) | E01/E02 | Gate isolation franchi localement ; CI non exécutée |
 | E05 | Auth, équipe et RBAC | VERIFIED_LOCAL | agent de réalisation | 50293ec | [rapport](reports/E05_2026-11-11.md) | E04 | Cognito BLOCKED_EXTERNAL (aucun compte AWS) ; limites de débit en mémoire |
 | E06 | UI, traduction et navigation | VERIFIED_LOCAL | agent de réalisation | 7fba1ba | [rapport](reports/E06_2026-11-11.md) | E01/E05 | Revue manuelle lecteur d'écran et appareils réels à faire (E22) |
-| E07 | Abonnement et droits | NOT_STARTED | — | — | — | E04/E05/E06 | Prochain lot éligible. Schéma posé (E04) ; simulateur de paiements signé (E02) |
-| E08 | Quotas et ledger | NOT_STARTED | — | — | — | E04/E07 | Schéma posé (E04) ; ADR-0002 accepté |
+| E07 | Abonnement et droits | VERIFIED_LOCAL | agent de réalisation | 73751d7 | [rapport](reports/E07_2026-11-11.md) | E04/E05/E06 | Stripe réel BLOCKED_EXTERNAL (aucun compte) ; taxes non traitées |
+| E08 | Quotas et ledger | NOT_STARTED | — | — | — | E04/E07 | Prochain lot éligible. Schéma posé (E04) ; droits par cycle projetés (E07) |
 | E09 | Onboarding et profil | NOT_STARTED | — | — | — | E05/E06/E08 | |
 | E10 | Médias privés | NOT_STARTED | — | — | — | E04/E06/E09 | |
 | E11 | Contenus et révisions | NOT_STARTED | — | — | — | E04/E06/E09/E10 | |

@@ -31,5 +31,60 @@
     "lead": "Une application pour les entreprises locales : vos faits vérifiés, vos médias, votre approbation sur chaque version.",
     "status": "Application en construction. Aucune fonctionnalité n'est encore offerte au public.",
     "metaDescription": "Préparation, approbation et programmation de contenus sociaux bilingues pour entreprises canadiennes."
+  },
+  "skipToContent": "Aller au contenu principal",
+  "close": "Fermer",
+  "cancel": "Annuler",
+  "confirm": "Confirmer",
+  "you": "vous",
+  "shell": {
+    "mainNav": "Navigation principale",
+    "organization": "Organisation",
+    "switchOrganization": "Changer d'organisation",
+    "createOrganization": "Créer une organisation",
+    "signedInAs": "Connecté : {email}",
+    "menu": "Menu",
+    "account": "Compte"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "lead": "Vue d'ensemble de votre organisation.",
+    "quotas": "Quotas du cycle",
+    "approvals": "Approbations en attente",
+    "upcoming": "Prochains envois",
+    "reconnect": "Comptes à reconnecter",
+    "notConfigured": "Pas encore configuré.",
+    "verifyEmailFirst": "Vérifiez votre adresse courriel pour débloquer la création d'organisation et la connexion des réseaux."
+  },
+  "comingSoon": {
+    "title": "Section pas encore disponible",
+    "description": "Cette section sera activée prochainement. Aucune donnée n'est affichée tant qu'elle n'est pas réelle."
+  },
+  "team": {
+    "title": "Équipe",
+    "members": "Membres",
+    "email": "Courriel",
+    "role": "Rôle",
+    "actions": "Actions",
+    "roles": {
+      "owner": "Propriétaire",
+      "admin": "Administrateur",
+      "editor": "Éditeur",
+      "reviewer": "Relecteur"
+    },
+    "inviteTitle": "Inviter un membre",
+    "invite": "Envoyer l'invitation",
+    "invited": "Invitation envoyée à {email}. Elle expire dans 7 jours.",
+    "changeRoleFor": "Rôle de {email}",
+    "roleChanged": "Rôle mis à jour.",
+    "remove": "Retirer",
+    "removeTitle": "Retirer ce membre ?",
+    "removeBody": "{email} perdra immédiatement l'accès à l'organisation.",
+    "removed": "Membre retiré.",
+    "transfer": "Transférer la propriété",
+    "transferTitle": "Transférer la propriété ?",
+    "transferBody": "{email} deviendra propriétaire. Vous deviendrez administrateur.",
+    "transferDone": "Propriété transférée.",
+    "noManage": "Votre rôle permet de consulter l'équipe, pas de la modifier."
   }
 }

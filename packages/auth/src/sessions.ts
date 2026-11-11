@@ -43,8 +43,13 @@ export const hashToken = (token: string): string => createHash("sha256").update(
 const normalizeEmail = (e: string): string => e.trim().toLowerCase();
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/** Reconnaissance robuste (le bundling peut dupliquer la classe : instanceof seul ne suffit pas). */
+function isIdentityError(e: unknown): e is IdentityError {
+  return e instanceof IdentityError || (typeof e === "object" && e !== null && (e as Error).name === "IdentityError" && typeof (e as IdentityError).code === "string");
+}
+
 function mapIdentity(e: unknown): never {
-  if (e instanceof IdentityError) {
+  if (isIdentityError(e)) {
     switch (e.code) {
       case "invalid_credentials":
         throw new ServiceError("invalid_credentials");

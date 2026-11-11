@@ -1,9 +1,11 @@
 import { defineConfig, devices } from "@playwright/test";
+import { e2eDatabaseUrl, MAILBOX } from "./e2e/env";
 
 const PORT = Number(process.env.E2E_PORT ?? 3100);
 
 export default defineConfig({
   testDir: "./e2e",
+  globalSetup: "./e2e/global-setup.ts",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 0,
@@ -23,6 +25,8 @@ export default defineConfig({
       APP_BASE_URL: `http://localhost:${PORT}`,
       ADAPTER_MODE: "fake",
       AUTH_MODE: "fake",
+      DATABASE_URL: e2eDatabaseUrl(),
+      SIMULATED_MAILBOX_FILE: MAILBOX,
     },
   },
 });

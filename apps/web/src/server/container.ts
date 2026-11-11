@@ -2,6 +2,7 @@
  * Dépendances du serveur web, créées une seule fois par processus.
  * Le simulateur d'identité est conservé sur globalThis pour survivre au rechargement à chaud en développement.
  */
+import { appendFileSync } from "node:fs";
 import { createIdentityProvider } from "@bbn/auth";
 import { loadConfig } from "@bbn/config";
 import { createPool } from "@bbn/db";
@@ -35,7 +36,12 @@ function withSimulatedMailLog(inner: EmailSender): EmailSender {
   return {
     async send(m) {
       const r = await inner.send(m);
-      if (!r.deduplicated) console.info(JSON.stringify({ level: "info", msg: "simulated_email", simulation: true, to: m.to, locale: m.locale, template: m.templateKey, subject: m.subject, text: m.text }));
+      if (!r.deduplicated) {
+        const line = JSON.stringify({ level: "info", msg: "simulated_email", simulation: true, to: m.to, locale: m.locale, template: m.templateKey, subject: m.subject, text: m.text });
+        console.info(line);
+        // Boîte simulée sur fichier, lue par les tests E2E (mode fake uniquement).
+        if (process.env.SIMULATED_MAILBOX_FILE) appendFileSync(process.env.SIMULATED_MAILBOX_FILE, line + "\n");
+      }
       return r;
     },
   };

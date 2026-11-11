@@ -17,7 +17,7 @@
     "test:contracts": "vitest run --project contracts",
     "test:db": "vitest run --project db",
     "test:e2e": "pnpm --filter @bbn/web test:e2e",
-    "i18n:check": "tsx packages/i18n/scripts/check.ts",
+    "i18n:check": "tsx packages/i18n/scripts/check.ts && tsx packages/i18n/scripts/check-jsx-literals.ts",
     "build": "pnpm -r build",
     "db:migrate": "tsx packages/db/scripts/migrate.ts",
     "db:seed": "tsx packages/db/scripts/seed.ts",

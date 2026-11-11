@@ -31,5 +31,60 @@
     "lead": "An app for local businesses: your verified facts, your media, your approval on every version.",
     "status": "App under construction. No feature is publicly available yet.",
     "metaDescription": "Bilingual social content preparation, approval and scheduling for Canadian businesses."
+  },
+  "skipToContent": "Skip to main content",
+  "close": "Close",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "you": "you",
+  "shell": {
+    "mainNav": "Main navigation",
+    "organization": "Organization",
+    "switchOrganization": "Switch organization",
+    "createOrganization": "Create an organization",
+    "signedInAs": "Signed in: {email}",
+    "menu": "Menu",
+    "account": "Account"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "lead": "Overview of your organization.",
+    "quotas": "Cycle quotas",
+    "approvals": "Pending approvals",
+    "upcoming": "Upcoming posts",
+    "reconnect": "Accounts to reconnect",
+    "notConfigured": "Not configured yet.",
+    "verifyEmailFirst": "Verify your email address to unlock organization creation and network connections."
+  },
+  "comingSoon": {
+    "title": "Section not available yet",
+    "description": "This section will be enabled soon. No data is shown until it is real."
+  },
+  "team": {
+    "title": "Team",
+    "members": "Members",
+    "email": "Email",
+    "role": "Role",
+    "actions": "Actions",
+    "roles": {
+      "owner": "Owner",
+      "admin": "Administrator",
+      "editor": "Editor",
+      "reviewer": "Reviewer"
+    },
+    "inviteTitle": "Invite a member",
+    "invite": "Send invitation",
+    "invited": "Invitation sent to {email}. It expires in 7 days.",
+    "changeRoleFor": "Role of {email}",
+    "roleChanged": "Role updated.",
+    "remove": "Remove",
+    "removeTitle": "Remove this member?",
+    "removeBody": "{email} will immediately lose access to the organization.",
+    "removed": "Member removed.",
+    "transfer": "Transfer ownership",
+    "transferTitle": "Transfer ownership?",
+    "transferBody": "{email} will become owner. You will become administrator.",
+    "transferDone": "Ownership transferred.",
+    "noManage": "Your role lets you view the team, not change it."
   }
 }

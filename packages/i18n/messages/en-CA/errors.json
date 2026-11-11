@@ -24,5 +24,6 @@
     "invitation_email_mismatch": "This invitation was sent to a different email address.",
     "rate_limited": "Too many attempts. Try again later.",
     "not_implemented": "Feature not available."
-  }
+  },
+  "network": "Cannot connect. Check your network and try again."
 }

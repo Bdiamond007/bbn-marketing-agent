@@ -1,4 +1,18 @@
 {
   "stepOf": "Étape {current} sur {total}",
-  "resume": "Reprendre la configuration"
+  "resume": "Reprendre la configuration",
+  "createOrg": {
+    "title": "Créer une organisation",
+    "name": "Nom de l'organisation",
+    "defaultLocale": "Langue par défaut",
+    "submit": "Créer"
+  },
+  "noOrg": {
+    "title": "Aucune organisation",
+    "lead": "Créez votre organisation ou acceptez une invitation pour commencer."
+  },
+  "locales": {
+    "fr-CA": "Français (Canada)",
+    "en-CA": "English (Canada)"
+  }
 }

@@ -1,4 +1,18 @@
 {
   "stepOf": "Step {current} of {total}",
-  "resume": "Resume setup"
+  "resume": "Resume setup",
+  "createOrg": {
+    "title": "Create an organization",
+    "name": "Organization name",
+    "defaultLocale": "Default language",
+    "submit": "Create"
+  },
+  "noOrg": {
+    "title": "No organization",
+    "lead": "Create your organization or accept an invitation to get started."
+  },
+  "locales": {
+    "fr-CA": "Français (Canada)",
+    "en-CA": "English (Canada)"
+  }
 }

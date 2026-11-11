@@ -14,5 +14,22 @@
   "locales": {
     "fr-CA": "Français (Canada)",
     "en-CA": "English (Canada)"
+  },
+  "checklist": {
+    "title": "Setup",
+    "done": "Done",
+    "todo": "To do",
+    "later": "Coming soon",
+    "steps": {
+      "verifyEmail": "Verify your email address",
+      "organization": "Create the organization",
+      "subscription": "Choose a plan",
+      "brand": "Publish the brand profile",
+      "media": "Add media",
+      "social": "Connect a social account",
+      "firstContent": "Prepare a first post",
+      "approval": "Approve a version",
+      "scheduling": "Schedule a post"
+    }
   }
 }

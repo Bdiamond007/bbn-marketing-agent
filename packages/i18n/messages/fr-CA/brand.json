@@ -1,4 +1,95 @@
 {
   "requiredFields": "Champs requis manquants : {fields}",
-  "factValidUntil": "Valide jusqu'au {date}"
+  "factValidUntil": "Valide jusqu'au {date}",
+  "title": "Marque",
+  "lead": "Profil utilisé pour préparer vos contenus. Seuls les faits confirmés et valides sont utilisés.",
+  "create": {
+    "title": "Créer la marque",
+    "submit": "Créer la marque"
+  },
+  "fields": {
+    "name": "Nom de la marque",
+    "sector": "Secteur",
+    "description": "Description",
+    "descriptionHint": "Ce que vous faites, en quelques phrases.",
+    "audience": "Clientèle cible",
+    "area": "Zone desservie",
+    "services": "Services",
+    "servicesHint": "Un service par ligne.",
+    "voice": "Ton",
+    "avoid": "À éviter",
+    "avoidHint": "Un élément par ligne (mots, sujets, promesses).",
+    "contentLocale": "Langue des contenus",
+    "contentLocaleHint": "Indépendante de la langue de l'interface.",
+    "timezone": "Fuseau horaire",
+    "timezoneHint": "Les envois déjà programmés gardent leur propre fuseau.",
+    "sourceConfirmed": "Je confirme que ces informations sont exactes et que je suis autorisé·e à les utiliser."
+  },
+  "sectors": {
+    "local_retail": "Commerce local",
+    "salon": "Salon",
+    "restaurant": "Restaurant",
+    "home_services": "Services résidentiels",
+    "b2b_consulting": "Conseil B2B",
+    "studio": "Studio",
+    "creative_services": "Services créatifs",
+    "other": "Autre"
+  },
+  "voices": {
+    "warm": "Chaleureux",
+    "professional": "Professionnel",
+    "playful": "Ludique",
+    "expert": "Expert",
+    "minimal": "Sobre"
+  },
+  "facts": {
+    "title": "Faits vérifiés",
+    "hint": "Horaires et prix : date de début obligatoire. Promotions : date de fin obligatoire.",
+    "kind": "Type",
+    "value": "Information",
+    "validFrom": "Valide à partir du",
+    "validUntil": "Valide jusqu'au",
+    "confirmed": "Information confirmée",
+    "add": "Ajouter un fait",
+    "remove": "Retirer ce fait",
+    "kinds": {
+      "hours": "Horaires",
+      "price": "Prix",
+      "promotion": "Promotion",
+      "service": "Service",
+      "address": "Adresse",
+      "contact": "Coordonnées",
+      "other": "Autre"
+    }
+  },
+  "sections": {
+    "identity": "Identité",
+    "audience": "Clientèle et zone",
+    "offer": "Services",
+    "tone": "Ton",
+    "settings": "Langue et fuseau",
+    "confirmation": "Confirmation"
+  },
+  "missingTitle": "À compléter avant publication",
+  "missing": {
+    "name": "Nom",
+    "sector": "Secteur",
+    "description": "Description",
+    "audience": "Clientèle cible",
+    "area": "Zone desservie",
+    "services": "Services",
+    "tone": "Ton",
+    "defaultContentLocale": "Langue des contenus",
+    "timezone": "Fuseau horaire",
+    "factsSourceConfirmed": "Confirmation des informations"
+  },
+  "factMissingValidity": "Date de validité manquante pour : {facts}",
+  "saveDraft": "Enregistrer le brouillon",
+  "draftSaved": "Brouillon enregistré. Vous pourrez reprendre plus tard.",
+  "publish": "Publier le profil",
+  "published": "Profil publié (version {version}).",
+  "publishedVersion": "Version publiée : {version}",
+  "notPublished": "Profil non publié",
+  "statusDraft": "Brouillon",
+  "statusActive": "Active"
 }

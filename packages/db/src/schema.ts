@@ -486,6 +486,15 @@ export const sessions = pgTable("sessions", {
 	unique("sessions_token_hash_key").on(table.tokenHash),
 ]);
 
+export const brandDrafts = pgTable("brand_drafts", {
+	brandId: uuid("brand_id").primaryKey().notNull(),
+	organizationId: uuid("organization_id").notNull(),
+	draftJson: jsonb("draft_json").default({}).notNull(),
+	version: integer().default(1).notNull(),
+	updatedBy: uuid("updated_by"),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+}, );
+
 export const memberships = pgTable("memberships", {
 	organizationId: uuid("organization_id").notNull(),
 	userId: uuid("user_id").notNull(),

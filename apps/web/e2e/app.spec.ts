@@ -195,3 +195,56 @@ test("facturation : page de succès sans effet, paiement simulé, abonnement act
   await expect(page.getByText("Publications : 0 réservées ou envoyées sur 45 (45 restantes)")).toBeVisible();
   await expectNoA11yViolations(page);
 });
+
+test("marque : brouillon repris après rechargement, champs manquants, faits datés, publication et checklist", async ({ page }) => {
+  const email = uniqEmail("brand");
+  await signUpAndVerify(page, email);
+  await signIn(page, email);
+  await page.goto("/fr/app/organizations/new");
+  await page.getByLabel("Nom de l'organisation").fill("Salon Démo (fictif)");
+  await page.getByRole("button", { name: "Créer" }).click();
+  await expect(page).toHaveURL(/\/fr\/app$/);
+
+  await page.goto("/fr/app/brand");
+  await page.getByLabel("Nom de la marque").fill("Salon Lumière (fictif)");
+  await page.getByLabel("Langue des contenus").selectOption("en-CA");
+  await page.getByLabel("Fuseau horaire").selectOption("America/Halifax");
+  await page.getByRole("button", { name: "Créer la marque" }).click();
+  await expect(page.getByText("Profil non publié")).toBeVisible();
+  await expectNoA11yViolations(page);
+
+  await page.getByLabel("Secteur").selectOption("salon");
+  await page.getByLabel("Description").fill("Coiffure et soins (fictif)");
+  await page.getByRole("button", { name: "Enregistrer le brouillon" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Brouillon enregistré" })).toBeVisible();
+
+  // Reprise : le brouillon vient du serveur, pas du navigateur.
+  await page.reload();
+  await expect(page.getByLabel("Description")).toHaveValue("Coiffure et soins (fictif)");
+  await expect(page.getByLabel("Langue des contenus")).toHaveValue("en-CA");
+  const missing = page.getByRole("status").filter({ hasText: "À compléter avant publication" });
+  await expect(missing).toContainText("Clientèle cible");
+  await expect(missing).not.toContainText("Description");
+
+  await page.getByLabel("Clientèle cible").fill("Résidents du quartier");
+  await page.getByLabel("Zone desservie").fill("Halifax");
+  await page.getByLabel("Services", { exact: true }).fill("Coupe\nColoration");
+  await page.getByLabel("Ton", { exact: true }).selectOption("warm");
+  await page.getByRole("button", { name: "Ajouter un fait" }).click();
+  await page.getByLabel("Type").selectOption("promotion");
+  await page.getByLabel("Information", { exact: true }).fill("Soin offert");
+  await page.getByLabel("Information confirmée").check();
+  await page.getByLabel("Je confirme que ces informations sont exactes").check();
+  await page.getByRole("button", { name: "Publier le profil" }).click();
+  await expect(page.getByRole("alert").filter({ hasText: "Un fait daté n'a pas de date de validité" })).toBeVisible(); // promotion sans date de fin
+  await page.getByLabel("Valide jusqu'au").fill("2030-12-31");
+  await page.getByRole("button", { name: "Publier le profil" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Profil publié (version 1)." })).toBeVisible();
+  await expect(page.getByText("Version publiée : 1")).toBeVisible();
+  await expectNoA11yViolations(page);
+
+  await page.goto("/fr/app");
+  const step = page.getByRole("listitem").filter({ hasText: "Publier le profil de marque" });
+  await expect(step.getByText("Fait")).toBeVisible();
+  await expect(page.getByRole("listitem").filter({ hasText: "Connecter un compte social" }).getByText("Bientôt disponible")).toBeVisible();
+});

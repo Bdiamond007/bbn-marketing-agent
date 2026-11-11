@@ -25,5 +25,22 @@
     "rate_limited": "Too many attempts. Try again later.",
     "not_implemented": "Feature not available."
   },
-  "network": "Cannot connect. Check your network and try again."
+  "network": "Cannot connect. Check your network and try again.",
+  "reasons": {
+    "brand_incomplete": "The brand profile is incomplete: fill in the listed fields.",
+    "facts_missing_validity": "A dated fact has no validity date (hours and prices: start; promotions: end).",
+    "brand_limit_reached": "Your plan allows a single active brand.",
+    "quota_exhausted": "This cycle's quota has been reached.",
+    "outside_entitlement_period": "This date is outside your current entitlement period.",
+    "no_current_entitlement_period": "No entitlement period in progress: choose a plan.",
+    "billing_access_denied": "Your subscription does not allow this action right now.",
+    "subscription_exists": "A subscription already exists: change plan instead of creating a new one.",
+    "no_subscription": "No subscription.",
+    "no_live_subscription": "No current subscription.",
+    "no_active_subscription": "No active subscription.",
+    "already_member": "This person is already a member of the organization.",
+    "use_transfer_or_leave": "To change your own role, transfer ownership or leave the organization.",
+    "already_owner": "This person is already an owner.",
+    "invalid_signature": "Invalid signature."
+  }
 }

@@ -13,7 +13,7 @@ const securityHeaders = [
 const config: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
-  transpilePackages: ["@bbn/config", "@bbn/i18n", "@bbn/ui", "@bbn/auth", "@bbn/billing", "@bbn/db", "@bbn/domain", "@bbn/integrations", "@bbn/observability"],
+  transpilePackages: ["@bbn/config", "@bbn/i18n", "@bbn/ui", "@bbn/auth", "@bbn/billing", "@bbn/brands", "@bbn/db", "@bbn/domain", "@bbn/integrations", "@bbn/observability"],
   serverExternalPackages: ["pg"],
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];

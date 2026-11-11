@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { ScreenState } from "../../../../components/ui";
 
-const SECTIONS = ["calendar", "content", "brand", "media", "accounts", "reports", "preferences"] as const;
+const SECTIONS = ["calendar", "content", "media", "accounts", "reports", "preferences"] as const;
 
 export async function generateMetadata({ params }: { params: Promise<{ section: string }> }) {
   const { section } = await params;

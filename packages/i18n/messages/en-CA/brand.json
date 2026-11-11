@@ -1,4 +1,95 @@
 {
   "requiredFields": "Missing required fields: {fields}",
-  "factValidUntil": "Valid until {date}"
+  "factValidUntil": "Valid until {date}",
+  "title": "Brand",
+  "lead": "Profile used to prepare your content. Only confirmed and valid facts are used.",
+  "create": {
+    "title": "Create the brand",
+    "submit": "Create brand"
+  },
+  "fields": {
+    "name": "Brand name",
+    "sector": "Industry",
+    "description": "Description",
+    "descriptionHint": "What you do, in a few sentences.",
+    "audience": "Target customers",
+    "area": "Service area",
+    "services": "Services",
+    "servicesHint": "One service per line.",
+    "voice": "Tone",
+    "avoid": "Avoid",
+    "avoidHint": "One item per line (words, topics, promises).",
+    "contentLocale": "Content language",
+    "contentLocaleHint": "Independent from the interface language.",
+    "timezone": "Time zone",
+    "timezoneHint": "Posts already scheduled keep their own time zone.",
+    "sourceConfirmed": "I confirm this information is accurate and that I am allowed to use it."
+  },
+  "sectors": {
+    "local_retail": "Local retail",
+    "salon": "Salon",
+    "restaurant": "Restaurant",
+    "home_services": "Home services",
+    "b2b_consulting": "B2B consulting",
+    "studio": "Studio",
+    "creative_services": "Creative services",
+    "other": "Other"
+  },
+  "voices": {
+    "warm": "Warm",
+    "professional": "Professional",
+    "playful": "Playful",
+    "expert": "Expert",
+    "minimal": "Understated"
+  },
+  "facts": {
+    "title": "Verified facts",
+    "hint": "Hours and prices: start date required. Promotions: end date required.",
+    "kind": "Type",
+    "value": "Information",
+    "validFrom": "Valid from",
+    "validUntil": "Valid until",
+    "confirmed": "Information confirmed",
+    "add": "Add a fact",
+    "remove": "Remove this fact",
+    "kinds": {
+      "hours": "Hours",
+      "price": "Price",
+      "promotion": "Promotion",
+      "service": "Service",
+      "address": "Address",
+      "contact": "Contact details",
+      "other": "Other"
+    }
+  },
+  "sections": {
+    "identity": "Identity",
+    "audience": "Customers and area",
+    "offer": "Services",
+    "tone": "Tone",
+    "settings": "Language and time zone",
+    "confirmation": "Confirmation"
+  },
+  "missingTitle": "To complete before publishing",
+  "missing": {
+    "name": "Name",
+    "sector": "Industry",
+    "description": "Description",
+    "audience": "Target customers",
+    "area": "Service area",
+    "services": "Services",
+    "tone": "Tone",
+    "defaultContentLocale": "Content language",
+    "timezone": "Time zone",
+    "factsSourceConfirmed": "Information confirmation"
+  },
+  "factMissingValidity": "Missing validity date for: {facts}",
+  "saveDraft": "Save draft",
+  "draftSaved": "Draft saved. You can resume later.",
+  "publish": "Publish profile",
+  "published": "Profile published (version {version}).",
+  "publishedVersion": "Published version: {version}",
+  "notPublished": "Profile not published",
+  "statusDraft": "Draft",
+  "statusActive": "Active"
 }

@@ -41,6 +41,9 @@ importers:
       '@bbn/billing':
         specifier: workspace:*
         version: link:../../packages/billing
+      '@bbn/brands':
+        specifier: workspace:*
+        version: link:../../packages/brands
       '@bbn/config':
         specifier: workspace:*
         version: link:../../packages/config
@@ -199,6 +202,31 @@ importers:
         specifier: 8.23.1
         version: 8.23.1
 
+  packages/brands:
+    dependencies:
+      '@bbn/auth':
+        specifier: workspace:*
+        version: link:../auth
+      '@bbn/db':
+        specifier: workspace:*
+        version: link:../db
+      '@bbn/domain':
+        specifier: workspace:*
+        version: link:../domain
+      pg:
+        specifier: 8.23.1
+        version: 8.23.1
+    devDependencies:
+      '@bbn/billing':
+        specifier: workspace:*
+        version: link:../billing
+      '@bbn/integrations':
+        specifier: workspace:*
+        version: link:../integrations
+      '@types/pg':
+        specifier: 8.23.1
+        version: 8.23.1
+
   packages/config:
     dependencies:
       zod:
@@ -224,7 +252,11 @@ importers:
         specifier: 0.31.11
         version: 0.31.11
 
-  packages/domain: {}
+  packages/domain:
+    dependencies:
+      zod:
+        specifier: 4.6.7
+        version: 4.6.7
 
   packages/i18n: {}
 

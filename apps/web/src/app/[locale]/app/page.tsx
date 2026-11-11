@@ -1,6 +1,8 @@
 import { titled } from "../../../lib/metadata";
 import { getTranslations } from "next-intl/server";
 import { getUsage, type UsageSummary } from "@bbn/billing";
+import { listBrands } from "@bbn/brands";
+import { Badge } from "../../../components/ui";
 import { apiDeps } from "../../../server/container";
 import { Card, Notice, ScreenState } from "../../../components/ui";
 import { Link } from "../../../i18n/navigation";
@@ -11,6 +13,19 @@ export default async function DashboardPage() {
   const session = await requireSession();
   const { current } = await currentOrganization(session);
   const usage: UsageSummary | null = current ? await getUsage(apiDeps(), session, current.id) : null;
+  const brands = current ? await listBrands(apiDeps(), session, current.id) : [];
+  // Onboarding reprenable (§5) : chaque étape reflète l'état réel, les étapes non livrées sont signalées comme telles.
+  const steps: { key: "verifyEmail" | "organization" | "subscription" | "brand" | "media" | "social" | "firstContent" | "approval" | "scheduling"; state: "done" | "todo" | "later" }[] = [
+    { key: "verifyEmail", state: session.emailVerified ? "done" : "todo" },
+    { key: "organization", state: current ? "done" : "todo" },
+    { key: "subscription", state: usage?.cycle ? "done" : "todo" },
+    { key: "brand", state: brands.some((b) => b.status === "active") ? "done" : "todo" },
+    { key: "media", state: "later" },
+    { key: "social", state: "later" },
+    { key: "firstContent", state: "later" },
+    { key: "approval", state: "later" },
+    { key: "scheduling", state: "later" },
+  ];
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -18,6 +33,16 @@ export default async function DashboardPage() {
         <p className="text-muted">{current ? current.name : t("common.dashboard.lead")}</p>
       </div>
       {!session.emailVerified ? <Notice tone="info" title={t("common.dashboard.verifyEmailFirst")} /> : null}
+      <Card title={t("onboarding.checklist.title")}>
+        <ol className="flex flex-col gap-2">
+          {steps.map((s) => (
+            <li key={s.key} className="flex flex-wrap items-center justify-between gap-2">
+              <span>{t(`onboarding.checklist.steps.${s.key}`)}</span>
+              <Badge tone={s.state === "done" ? "success" : "neutral"}>{t(`onboarding.checklist.${s.state}`)}</Badge>
+            </li>
+          ))}
+        </ol>
+      </Card>
       {!current ? (
         <ScreenState
           kind="empty"

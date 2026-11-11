@@ -158,3 +158,36 @@ export function Card({ title, children, headingLevel = 2 }: { title?: string; ch
     </section>
   );
 }
+
+export function TextArea({ label, hint, error, id, className, ...rest }: React.TextareaHTMLAttributes<HTMLTextAreaElement> & { label: string; hint?: string; error?: string | null }) {
+  const auto = useId();
+  const fieldId = id ?? auto;
+  const hintId = hint ? `${fieldId}-hint` : undefined;
+  const errorId = error ? `${fieldId}-error` : undefined;
+  return (
+    <div className={clsx("flex flex-col gap-1", className)}>
+      <label htmlFor={fieldId} className="font-semibold text-text">{label}</label>
+      {hint ? <p id={hintId} className="text-sm text-muted">{hint}</p> : null}
+      <textarea
+        id={fieldId}
+        rows={3}
+        {...rest}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={[hintId, errorId].filter(Boolean).join(" ") || undefined}
+        className={clsx("rounded-sm border bg-paper px-3 py-2 text-text", error ? "border-danger" : "border-muted")}
+      />
+      {error ? <p id={errorId} className="text-sm font-semibold text-danger">{error}</p> : null}
+    </div>
+  );
+}
+
+export function Checkbox({ label, id, ...rest }: InputHTMLAttributes<HTMLInputElement> & { label: string }) {
+  const auto = useId();
+  const fieldId = id ?? auto;
+  return (
+    <div className="flex min-h-11 items-center gap-3">
+      <input id={fieldId} type="checkbox" {...rest} className="h-5 w-5 accent-[#806000]" />
+      <label htmlFor={fieldId} className="text-text">{label}</label>
+    </div>
+  );
+}

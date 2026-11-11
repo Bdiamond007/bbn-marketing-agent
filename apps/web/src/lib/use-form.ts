@@ -32,7 +32,14 @@ export function useForm() {
     try {
       const r = await call();
       if (r.ok) return r.data;
-      const message = r.messageKey === "errors.generic" ? t("errors.generic", { requestId: r.requestId ?? "—" }) : t(r.messageKey as never);
+      // Raison métier précise quand elle est connue (ex. « promotion sans date de fin »), sinon message du code.
+      const reasonKey = r.reason ? `errors.reasons.${r.reason}` : null;
+      const message =
+        reasonKey && t.has(reasonKey as never)
+          ? t(reasonKey as never)
+          : r.messageKey === "errors.generic"
+            ? t("errors.generic", { requestId: r.requestId ?? "—" })
+            : t(r.messageKey as never);
       fail(message, Object.fromEntries(r.fields.map((f) => [f, t("errors.codes.validation_failed")])));
       return null;
     } finally {

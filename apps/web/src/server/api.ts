@@ -6,6 +6,7 @@
 import { z } from "zod";
 import * as Auth from "@bbn/auth";
 import * as Billing from "@bbn/billing";
+import * as Brands from "@bbn/brands";
 import { isSimulatedPayments } from "@bbn/integrations/fakes";
 import { ServiceError, type Clock } from "@bbn/domain";
 import { assertSameOrigin, clearSessionCookie, cookieName, errorResponse, json, locale, memberRole, parseBody, readCookie, requestContext, sessionCookie, uuid, type RequestContext } from "./http";
@@ -207,6 +208,33 @@ const handlers = {
     const s = await requireSession(req, deps);
     const b = await parseBody(req, z.object({ planCode: z.string().min(1).max(40) }));
     return json(await Billing.changePlan(deps, s, param(p, "id"), b.planCode, ctx), 202, ctx);
+  },
+  "brands.list": async (req, deps, ctx, p) => {
+    const s = await requireSession(req, deps);
+    return json({ data: await Brands.listBrands(deps, s, param(p, "id")) }, 200, ctx);
+  },
+  "brands.create": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ name: z.string().min(1).max(200), timezone: z.string().min(1).max(64), defaultContentLocale: locale }));
+    const r = await Brands.createBrand(deps, s, param(p, "id"), b, ctx);
+    return json({ id: r.brandId }, 201, ctx);
+  },
+  "brands.get": async (req, deps, ctx, p) => {
+    const s = await requireSession(req, deps);
+    return json(await Brands.getBrand(deps, s, param(p, "id"), param(p, "brandId")), 200, ctx);
+  },
+  "brands.saveDraft": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ draft: z.unknown(), expectedVersion: z.number().int().nonnegative() }));
+    return json(await Brands.saveDraft(deps, s, param(p, "id"), param(p, "brandId"), b.draft, b.expectedVersion, ctx), 200, ctx);
+  },
+  "brands.publish": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ expectedVersion: z.number().int().nonnegative() }));
+    return json(await Brands.publishProfile(deps, s, param(p, "id"), param(p, "brandId"), b.expectedVersion, ctx), 200, ctx);
   },
   /** Webhook fournisseur : pas de session ni de contrôle d'origine ; signature sur le corps brut. */
   "webhooks.stripe": async (req, deps, ctx) => {

@@ -250,9 +250,9 @@
   "gwt": "Given 50 demandes concurrentes sur le dernier crédit When elles s'exécutent Then une seule réussit",
   "screen": "billing / tableau de bord",
   "entity": "UsageReservation, UsageLedger",
-  "endpoint": "service entitlements",
-  "test": "packages/db/src/isolation.db.test.ts (append-only, dédoublonnage) ; à compléter E08",
-  "status": "NOT_STARTED"
+  "endpoint": "reserve/consume/release (packages/billing/src/quota.ts)",
+  "test": "packages/billing/src/quota.db.test.ts",
+  "status": "VERIFIED_LOCAL"
  },
  {
   "req": "NOTIF-01",

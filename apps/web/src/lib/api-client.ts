@@ -3,13 +3,13 @@ export type ApiResult<T> =
   | { ok: true; status: number; data: T }
   | { ok: false; status: number; code: string; messageKey: string; requestId: string | null; fields: string[]; reason: string | null };
 
-export async function api<T = unknown>(path: string, init: { method?: "GET" | "POST" | "PATCH" | "DELETE"; body?: unknown } = {}): Promise<ApiResult<T>> {
+export async function api<T = unknown>(path: string, init: { method?: "GET" | "POST" | "PATCH" | "DELETE"; body?: unknown; headers?: Record<string, string> } = {}): Promise<ApiResult<T>> {
   let res: Response;
   try {
     res = await fetch(`/api/v1${path}`, {
       method: init.method ?? (init.body === undefined ? "GET" : "POST"),
       credentials: "same-origin",
-      headers: init.body === undefined ? {} : { "content-type": "application/json" },
+      headers: { ...(init.body === undefined ? {} : { "content-type": "application/json" }), ...(init.headers ?? {}) },
       body: init.body === undefined ? undefined : JSON.stringify(init.body),
     });
   } catch {

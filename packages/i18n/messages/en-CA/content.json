@@ -80,5 +80,13 @@
     "added": "Comment added.",
     "onVersion": "On version {number}",
     "unknownAuthor": "Removed member"
+  },
+  "ai": {
+    "generate": "Suggest with AI",
+    "regenerate": "New AI suggestion",
+    "addAndGenerate": "Add and suggest with AI",
+    "succeeded": "AI suggestion saved. Review and edit it before submitting.",
+    "failed": "The AI suggestion failed or was rejected by our checks (unverified facts, language…). No credit was used. You can write the text yourself.",
+    "queued": "Suggestion in progress. Reload the page in a moment."
   }
 }

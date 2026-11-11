@@ -155,6 +155,8 @@ export interface GenerationContext {
   profile: BrandDraft;
   facts: Fact[];
   excludedFacts: { expired: string[]; notYetValid: string[]; unconfirmed: string[] };
+  /** Faits expirés (valeurs), pour refuser toute reprise par l'IA. */
+  expiredFacts: Fact[];
 }
 
 /**
@@ -174,5 +176,6 @@ export async function loadGenerationContext(client: pg.PoolClient, brandId: stri
     profile: p,
     facts: split.usable,
     excludedFacts: { expired: split.expired.map((f) => f.id), notYetValid: split.notYetValid.map((f) => f.id), unconfirmed: split.unconfirmed.map((f) => f.id) },
+    expiredFacts: split.expired,
   };
 }

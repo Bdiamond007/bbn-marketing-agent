@@ -6,7 +6,8 @@ import { projectPending, reconcileSubscriptions } from "@bbn/billing";
 import { createPool } from "@bbn/db";
 import { cleanupOrphanUploads } from "@bbn/media";
 import { randomUUID } from "node:crypto";
-import { consumeBatch, relayOutbox, outboxStats, type Handler } from "@bbn/jobs";
+import { consumeBatch, relayOutbox, outboxStats, type Envelope, type Handler } from "@bbn/jobs";
+import { processGenerationMessage, recoverStaleJobs, type AiDeps } from "@bbn/ai";
 
 // Validation au démarrage : configuration invalide (dont fake en production) ⇒ arrêt immédiat.
 const config = loadConfig();
@@ -14,8 +15,8 @@ const logger = createLogger({ service: "worker", env: config.APP_ENV });
 const adapters = createAdapters(config, systemClock);
 
 /** Consommateurs idempotents par file (type d'événement → consommateur). Les handlers métier arrivent avec E13/E15/E18. */
-const handlers: Record<QueueName, Record<string, { consumer: string; handle: Handler }>> = {
-  generation: {},
+/** La file « generation » a son propre consommateur (appel IA hors transaction, idempotent par l'état du job). */
+const handlers: Record<Exclude<QueueName, "generation">, Record<string, { consumer: string; handle: Handler }>> = {
   publishing: {},
   notifications: {},
   projections: {},
@@ -35,6 +36,7 @@ const RECONCILE_EVERY_MS = 15 * 60 * 1000;
 let lastReconcile = 0;
 let lastMediaCleanup = 0;
 let lastStats = 0;
+let lastStaleCheck = 0;
 const WORKER_ID = `worker-${randomUUID().slice(0, 8)}`;
 
 logger.info("worker_started", { adapterMode: adapters.mode, simulation: adapters.mode === "fake" });
@@ -72,7 +74,22 @@ while (!stopping) {
     }
   }
   if (pool) {
-    for (const q of Object.keys(handlers) as QueueName[]) {
+    // Génération IA : réclamation courte, appel hors transaction, résultats en une transaction.
+    const aiDeps = { pool, clock: systemClock, ai: adapters.ai, aiModel: config.AI_MODEL_TEXT ?? "fake-model", simulation: adapters.mode === "fake" } as unknown as AiDeps;
+    for (const m of await adapters.queue.receive<Envelope<{ jobId?: string }>>("generation", { maxMessages: 2, visibilityTimeoutSeconds: 300 }).catch(() => [])) {
+      try {
+        const outcome = m.body?.type === "ai.generate" ? await processGenerationMessage(aiDeps, m.body) : "skipped";
+        await adapters.queue.ack("generation", m.receiptHandle);
+        logger.info("ai_generation", { outcome, correlationId: m.body?.correlationId, organizationId: m.body?.organizationId });
+      } catch (e) {
+        logger.warn("ai_generation_failed", { error: e instanceof Error ? e.name : "unknown", correlationId: m.body?.correlationId });
+      }
+    }
+    if (Date.now() - lastStaleCheck >= 5 * 60_000) {
+      lastStaleCheck = Date.now();
+      await recoverStaleJobs({ pool, clock: systemClock }).then((n) => n && logger.warn("ai_stale_jobs_recovered", { count: n }), () => undefined);
+    }
+    for (const q of Object.keys(handlers) as (keyof typeof handlers)[]) {
       await consumeBatch({ pool, queue: adapters.queue, logger }, q, handlers[q]).catch((e: unknown) => logger.error("consume_failed", { queue: q, error: e instanceof Error ? e.name : "unknown" }));
     }
   }

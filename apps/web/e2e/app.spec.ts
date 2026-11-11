@@ -347,3 +347,44 @@ test("contenus : sujet, variantes FR et EN séparées, versions et historique, s
   await expect(page.getByRole("link", { name: "Menu du temps des fêtes" })).toBeVisible();
   await expect(page.getByText("2 variantes")).toBeVisible();
 });
+
+test("IA : proposition validée puis nouvelle proposition, versions « Proposition IA » dans l'historique", async ({ page }) => {
+  const email = uniqEmail("ai");
+  await signUpAndVerify(page, email);
+  await signIn(page, email);
+  await page.goto("/fr/app/organizations/new");
+  await page.getByLabel("Nom de l'organisation").fill("Boulangerie IA (fictive)");
+  await page.getByRole("button", { name: "Créer" }).click();
+  await expect(page).toHaveURL(/\/fr\/app$/);
+  await page.goto("/fr/app/billing");
+  await page.locator("section").filter({ has: page.getByRole("heading", { name: "Essentiel", level: 3 }) }).last().getByRole("button", { name: "Choisir ce plan" }).click();
+  await page.getByRole("button", { name: "Simuler un paiement réussi" }).click();
+  await expect(page.getByRole("heading", { name: "Plan actuel : Essentiel" })).toBeVisible();
+
+  await page.goto("/fr/app/brand");
+  await page.getByLabel("Nom de la marque").fill("Boulangerie IA (fictive)");
+  await page.getByRole("button", { name: "Créer la marque" }).click();
+  await page.getByLabel("Secteur").selectOption("restaurant");
+  await page.getByLabel("Description").fill("Pains au levain");
+  await page.getByLabel("Clientèle cible").fill("Familles du quartier");
+  await page.getByLabel("Zone desservie").fill("Montréal");
+  await page.getByLabel("Services", { exact: true }).fill("Pains");
+  await page.getByLabel("Ton", { exact: true }).selectOption("warm");
+  await page.getByLabel("Je confirme que ces informations sont exactes").check();
+  await page.getByRole("button", { name: "Publier le profil" }).click();
+  await expect(page.getByText("Version publiée : 1")).toBeVisible();
+
+  await page.goto("/fr/app/content");
+  await page.getByLabel("Sujet").fill("Galettes des rois");
+  await page.getByRole("button", { name: "Créer le contenu" }).click();
+  await expect(page.getByRole("heading", { name: "Galettes des rois" })).toBeVisible();
+  await page.getByRole("button", { name: "Ajouter et proposer avec l'IA" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Proposition IA enregistrée." })).toBeVisible();
+  await expect(page.getByLabel("Texte de la publication")).toHaveValue(/SIMULATION.*Galettes des rois/);
+  await expect(page.getByRole("tabpanel").getByRole("listitem").first()).toContainText("Proposition IA");
+
+  await page.getByRole("button", { name: "Nouvelle proposition IA" }).click();
+  await expect(page.getByRole("tabpanel").getByRole("status").filter({ hasText: "Proposition IA enregistrée." })).toBeVisible();
+  await expect(page.getByRole("tabpanel").getByRole("listitem")).toHaveCount(2);
+  await expectNoA11yViolations(page);
+});

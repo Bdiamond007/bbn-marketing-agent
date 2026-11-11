@@ -9,11 +9,12 @@ import * as Billing from "@bbn/billing";
 import * as Brands from "@bbn/brands";
 import * as Media from "@bbn/media";
 import * as Content from "@bbn/content";
+import * as Ai from "@bbn/ai";
 import { isSimulatedPayments, isSimulatedStorage } from "@bbn/integrations/fakes";
 import { ServiceError, type Clock } from "@bbn/domain";
 import { assertSameOrigin, clearSessionCookie, cookieName, errorResponse, json, locale, memberRole, parseBody, readCookie, requestContext, sessionCookie, uuid, type RequestContext } from "./http";
 
-export interface ApiDeps extends Billing.BillingDeps, Media.MediaDeps {
+export interface ApiDeps extends Billing.BillingDeps, Media.MediaDeps, Ai.AiDeps {
   clock: Clock;
   limiters: {
     signInIp: Auth.FixedWindowLimiter;
@@ -315,6 +316,24 @@ const handlers = {
     const s = await requireSession(req, deps);
     const b = await parseBody(req, z.object({ event: z.enum(["submit", "archive", "restore"]), expectedVersion: z.number().int().nonnegative() }));
     return json(await Content.applyVariantEvent(deps, s, param(p, "id"), param(p, "variantId"), b.event, b.expectedVersion, ctx), 200, ctx);
+  },
+  "ai.generate": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({
+      targets: z.array(z.object({ provider: z.enum(["facebook_page", "instagram_business", "linkedin_page"]), locale })).min(1).max(6),
+      mode: z.enum(["initial", "regenerate"]),
+    }));
+    const key = req.headers.get("idempotency-key") ?? undefined;
+    const orgId = param(p, "id");
+    const r = await Ai.startGeneration(deps, s, orgId, param(p, "itemId"), { ...b, ...(key ? { idempotencyKey: key } : {}) }, ctx);
+    // Mode simulation : pas de worker obligatoire en local ; le traitement est idempotent par l'état du job.
+    if (deps.simulation && !r.reused) await Ai.processGenerationMessage(deps, { messageId: r.outboxId ?? r.jobId, type: "ai.generate", organizationId: orgId, correlationId: ctx.requestId, payload: { jobId: r.jobId } });
+    return json({ jobId: r.jobId, status: (await Ai.getJob(deps, s, orgId, r.jobId)).status }, 202, ctx);
+  },
+  "ai.job": async (req, deps, ctx, p) => {
+    const s = await requireSession(req, deps);
+    return json(await Ai.getJob(deps, s, param(p, "id"), param(p, "jobId")), 200, ctx);
   },
   "comments.list": async (req, deps, ctx, p) => {
     const s = await requireSession(req, deps);

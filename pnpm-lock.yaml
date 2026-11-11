@@ -35,6 +35,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@bbn/ai':
+        specifier: workspace:*
+        version: link:../../packages/ai
       '@bbn/auth':
         specifier: workspace:*
         version: link:../../packages/auth
@@ -62,6 +65,9 @@ importers:
       '@bbn/integrations':
         specifier: workspace:*
         version: link:../../packages/integrations
+      '@bbn/jobs':
+        specifier: workspace:*
+        version: link:../../packages/jobs
       '@bbn/media':
         specifier: workspace:*
         version: link:../../packages/media
@@ -129,6 +135,9 @@ importers:
 
   apps/worker:
     dependencies:
+      '@bbn/ai':
+        specifier: workspace:*
+        version: link:../../packages/ai
       '@bbn/billing':
         specifier: workspace:*
         version: link:../../packages/billing
@@ -172,6 +181,46 @@ importers:
       tsx:
         specifier: 4.23.15
         version: 4.23.15
+
+  packages/ai:
+    dependencies:
+      '@bbn/auth':
+        specifier: workspace:*
+        version: link:../auth
+      '@bbn/billing':
+        specifier: workspace:*
+        version: link:../billing
+      '@bbn/brands':
+        specifier: workspace:*
+        version: link:../brands
+      '@bbn/db':
+        specifier: workspace:*
+        version: link:../db
+      '@bbn/domain':
+        specifier: workspace:*
+        version: link:../domain
+      '@bbn/integrations':
+        specifier: workspace:*
+        version: link:../integrations
+      '@bbn/jobs':
+        specifier: workspace:*
+        version: link:../jobs
+      pg:
+        specifier: 8.23.1
+        version: 8.23.1
+      zod:
+        specifier: 4.6.7
+        version: 4.6.7
+    devDependencies:
+      '@bbn/content':
+        specifier: workspace:*
+        version: link:../content
+      '@bbn/observability':
+        specifier: workspace:*
+        version: link:../observability
+      '@types/pg':
+        specifier: 8.23.1
+        version: 8.23.1
 
   packages/auth:
     dependencies:

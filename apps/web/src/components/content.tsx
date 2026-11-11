@@ -24,6 +24,19 @@ export interface CommentView {
   createdAt: string;
 }
 
+type JobStatus = "queued" | "running" | "succeeded" | "failed" | "cancelled";
+
+/** Lance une génération IA (clé d'idempotence par clic) et renvoie le message de résultat à afficher. */
+async function requestGeneration(f: ReturnType<typeof useForm>, organizationId: string, itemId: string, target: { provider: string; locale: string }, mode: "initial" | "regenerate"): Promise<{ tone: "success" | "error" | "info"; text: string } | null> {
+  const r = await f.run<{ status: JobStatus }>({}, () =>
+    api(`/organizations/${organizationId}/content-items/${itemId}/generate`, { body: { targets: [target], mode }, headers: { "idempotency-key": `ui-${crypto.randomUUID()}` } }),
+  );
+  if (!r) return null;
+  if (r.status === "succeeded") return { tone: "success", text: f.t("content.ai.succeeded") };
+  if (r.status === "failed") return { tone: "error", text: f.t("content.ai.failed") };
+  return { tone: "info", text: f.t("content.ai.queued") };
+}
+
 export function StateBadge({ state }: { state: State }) {
   const f = useForm();
   return <Badge tone={state === "approved" ? "success" : state === "changes_requested" ? "error" : "neutral"}>{f.t(`content.states.${state}`)}</Badge>;
@@ -47,13 +60,21 @@ export function NewContentForm({ organizationId, brandId }: { organizationId: st
   );
 }
 
-function VariantEditor({ organizationId, variant, media, history, canEdit }: { organizationId: string; variant: VariantView; media: ReadyMedia[]; history: RevisionView[]; canEdit: boolean }) {
+function VariantEditor({ organizationId, itemId, variant, media, history, canEdit }: { organizationId: string; itemId: string; variant: VariantView; media: ReadyMedia[]; history: RevisionView[]; canEdit: boolean }) {
   const f = useForm();
   const format = useFormatter();
   const router = useRouter();
   const [caption, setCaption] = useState(variant.current?.caption ?? "");
   const [selected, setSelected] = useState<string[]>(variant.current?.media.map((m) => m.mediaAssetId) ?? []);
   const [notice, setNotice] = useState<string | null>(null);
+  const [aiNotice, setAiNotice] = useState<{ tone: "success" | "error" | "info"; text: string } | null>(null);
+  async function generate() {
+    const n = await requestGeneration(f, organizationId, itemId, { provider: variant.provider, locale: variant.locale }, variant.current ? "regenerate" : "initial");
+    if (n) {
+      setAiNotice(n);
+      router.refresh();
+    }
+  }
   const providerLabel = f.t(`content.providers.${variant.provider}`);
   const localeLabel = f.t(`content.locales.${variant.locale}`);
   const mediaById = new Map(media.map((m) => [m.id, m]));
@@ -83,6 +104,7 @@ function VariantEditor({ organizationId, variant, media, history, canEdit }: { o
         </div>
         <p className="text-sm text-muted">{f.t("content.editor.destination", { provider: providerLabel, locale: localeLabel })}</p>
         {notice ? <Notice tone="success" title={notice} /> : null}
+        {aiNotice ? <Notice tone={aiNotice.tone} title={aiNotice.text} /> : null}
         {f.error ? <Notice tone="error" title={f.error} focusRef={f.summaryRef} /> : null}
         <form noValidate onSubmit={save} className="flex flex-col gap-4">
           <fieldset disabled={!canEdit || variant.status === "archived" || variant.status === "generating"} className="flex flex-col gap-4">
@@ -103,6 +125,7 @@ function VariantEditor({ organizationId, variant, media, history, canEdit }: { o
           {canEdit ? (
             <div className="flex flex-wrap gap-3">
               {variant.status !== "archived" ? <Button type="submit" busy={f.busy}>{f.t("content.editor.save")}</Button> : null}
+              {variant.status === "draft" || variant.status === "changes_requested" ? <Button type="button" variant="secondary" busy={f.busy} onClick={generate}>{variant.current ? f.t("content.ai.regenerate") : f.t("content.ai.generate")}</Button> : null}
               {variant.status === "draft" || variant.status === "changes_requested" ? <Button type="button" variant="secondary" busy={f.busy} onClick={() => event("submit")}>{f.t("content.editor.submit")}</Button> : null}
               {variant.status === "archived" ? <Button type="button" variant="secondary" onClick={() => event("restore")}>{f.t("content.editor.restore")}</Button> : <Button type="button" variant="ghost" onClick={() => event("archive")}>{f.t("content.editor.archive")}</Button>}
             </div>
@@ -149,6 +172,13 @@ export function ContentEditor({ organizationId, item, media, histories, comments
     const r = await f.run({}, () => api(`/organizations/${organizationId}/content-items/${item.id}/variants`, { body: { provider, locale } }));
     if (r) router.refresh();
   }
+  async function addAndGenerate() {
+    const n = await requestGeneration(f, organizationId, item.id, { provider, locale }, "initial");
+    if (n) {
+      setNotice(n.text);
+      router.refresh();
+    }
+  }
   async function addComment(e: FormEvent) {
     e.preventDefault();
     const r = await f.run({ body: comment }, () => api(`/organizations/${organizationId}/content-items/${item.id}/comments`, { body: { body: comment } }));
@@ -178,7 +208,7 @@ export function ContentEditor({ organizationId, item, media, histories, comments
           </Tabs.List>
           {item.variants.map((v) => (
             <Tabs.Content key={v.id} value={v.id}>
-              <VariantEditor organizationId={organizationId} variant={v} media={media} history={histories[v.id] ?? []} canEdit={canEdit} />
+              <VariantEditor organizationId={organizationId} itemId={item.id} variant={v} media={media} history={histories[v.id] ?? []} canEdit={canEdit} />
             </Tabs.Content>
           ))}
         </Tabs.Root>
@@ -189,6 +219,7 @@ export function ContentEditor({ organizationId, item, media, histories, comments
             <SelectField label={f.t("content.addVariant.provider")} value={provider} onChange={(e) => setProvider(e.target.value as typeof provider)} options={PROVIDERS.map((p) => ({ value: p, label: f.t(`content.providers.${p}`) }))} />
             <SelectField label={f.t("content.addVariant.locale")} value={locale} onChange={(e) => setLocale(e.target.value as typeof locale)} options={LOCALES.map((l) => ({ value: l, label: f.t(`content.locales.${l}`) }))} />
             <Button type="submit" variant="secondary" busy={f.busy}>{f.t("content.addVariant.submit")}</Button>
+            <Button type="button" busy={f.busy} onClick={addAndGenerate}>{f.t("content.ai.addAndGenerate")}</Button>
           </form>
         </Card>
       ) : null}

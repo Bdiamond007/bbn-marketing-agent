@@ -33,7 +33,9 @@
     "@bbn/brands": "workspace:*",
     "@bbn/media": "workspace:*",
     "@bbn/content": "workspace:*",
-    "@radix-ui/react-tabs": "1.2.1"
+    "@radix-ui/react-tabs": "1.2.1",
+    "@bbn/ai": "workspace:*",
+    "@bbn/jobs": "workspace:*"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

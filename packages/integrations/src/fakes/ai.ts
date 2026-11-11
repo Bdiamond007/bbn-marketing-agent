@@ -3,7 +3,7 @@ import { AiProviderError, type AiTextProvider, type AiTextRequest, type AiTextRe
 import { ScenarioScript } from "../scenario";
 import { sha256Hex } from "./util";
 
-export type AiScenario = "success" | "invalid_json" | "schema_violation" | "timeout" | "rate_limited" | "provider_error";
+export type AiScenario = "success" | "invalid_json" | "schema_violation" | "timeout" | "rate_limited" | "provider_error" | "scripted";
 
 /**
  * IA simulée, déterministe : la sortie dépend uniquement de la requête.
@@ -14,6 +14,16 @@ export class FakeAiTextProvider implements AiTextProvider {
   readonly providerId = "fake";
   readonly scenarios = new ScenarioScript<AiScenario>("success");
   readonly calls: AiTextRequest[] = [];
+  private readonly scripted: string[] = [];
+
+  /** Programme une sortie brute exacte (corpus d'évaluation : simule un modèle qui se trompe ou obéit à une injection). */
+  respondWith(...outputs: (string | Record<string, unknown>)[]): this {
+    for (const o of outputs) {
+      this.scripted.push(typeof o === "string" ? o : JSON.stringify(o));
+      this.scenarios.next("scripted");
+    }
+    return this;
+  }
 
   constructor(readonly clock?: Clock) {}
 
@@ -29,7 +39,8 @@ export class FakeAiTextProvider implements AiTextProvider {
     const topic = typeof req.untrustedContext.topic === "string" ? req.untrustedContext.topic : "";
     const fr = req.locale === "fr-CA";
     let outputText: string;
-    if (s === "invalid_json") outputText = "{ not json";
+    if (s === "scripted") outputText = this.scripted.shift() ?? "{}";
+    else if (s === "invalid_json") outputText = "{ not json";
     else if (s === "schema_violation") outputText = JSON.stringify({ caption: 42 });
     else
       outputText = JSON.stringify({

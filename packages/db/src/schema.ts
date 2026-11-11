@@ -1,5 +1,5 @@
 // GÉNÉRÉ par scripts/introspect.sh (drizzle-kit pull + postprocess-schema) — ne pas éditer à la main.
-import { pgTable, unique, uuid, text, integer, timestamp, index, uniqueIndex, boolean, jsonb, date, bigint, numeric, primaryKey } from "drizzle-orm/pg-core"
+import { pgTable, unique, uuid, text, integer, timestamp, index, uniqueIndex, boolean, jsonb, date, numeric, bigint, primaryKey } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
@@ -293,27 +293,6 @@ export const notifications = pgTable("notifications", {
 	unique("notifications_delivery_key_key").on(table.deliveryKey),
 ]);
 
-export const aiJobs = pgTable("ai_jobs", {
-	id: uuid().defaultRandom().primaryKey().notNull(),
-	organizationId: uuid("organization_id").notNull(),
-	brandId: uuid("brand_id").notNull(),
-	contentItemId: uuid("content_item_id"),
-	promptVersion: text("prompt_version").notNull(),
-	model: text(),
-	status: text().default('queued').notNull(),
-	inputTokens: integer("input_tokens"),
-	outputTokens: integer("output_tokens"),
-	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
-	costEstimateMicros: bigint("cost_estimate_micros", { mode: "number" }),
-	safeErrorCode: text("safe_error_code"),
-	startedAt: timestamp("started_at", { withTimezone: true, mode: 'string' }),
-	finishedAt: timestamp("finished_at", { withTimezone: true, mode: 'string' }),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-}, (table) => [
-	index("ai_jobs_org_status_idx").using("btree", table.organizationId.asc().nullsLast().op("text_ops"), table.status.asc().nullsLast().op("text_ops")),
-	unique("ai_jobs_organization_id_id_key").on(table.id, table.organizationId),
-]);
-
 export const analyticsSnapshots = pgTable("analytics_snapshots", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
 	organizationId: uuid("organization_id").notNull(),
@@ -368,6 +347,36 @@ export const webhookEvents = pgTable("webhook_events", {
 }, (table) => [
 	index("webhook_events_pending_idx").using("btree", table.receivedAt.asc().nullsLast().op("timestamptz_ops")).where(sql`(status = 'received'::text)`),
 	unique("webhook_events_provider_external_event_id_key").on(table.provider, table.externalEventId),
+]);
+
+export const aiJobs = pgTable("ai_jobs", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	organizationId: uuid("organization_id").notNull(),
+	brandId: uuid("brand_id").notNull(),
+	contentItemId: uuid("content_item_id"),
+	promptVersion: text("prompt_version").notNull(),
+	model: text(),
+	status: text().default('queued').notNull(),
+	inputTokens: integer("input_tokens"),
+	outputTokens: integer("output_tokens"),
+	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
+	costEstimateMicros: bigint("cost_estimate_micros", { mode: "number" }),
+	safeErrorCode: text("safe_error_code"),
+	startedAt: timestamp("started_at", { withTimezone: true, mode: 'string' }),
+	finishedAt: timestamp("finished_at", { withTimezone: true, mode: 'string' }),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	mode: text().default('initial').notNull(),
+	targets: jsonb().default([]).notNull(),
+	idempotencyKey: text("idempotency_key"),
+	requestFingerprint: text("request_fingerprint"),
+	correlationId: text("correlation_id"),
+	latencyMs: integer("latency_ms"),
+	results: jsonb().default([]).notNull(),
+	createdBy: uuid("created_by"),
+}, (table) => [
+	uniqueIndex("ai_jobs_idempotency_uq").using("btree", table.organizationId.asc().nullsLast().op("text_ops"), table.idempotencyKey.asc().nullsLast().op("text_ops")).where(sql`(idempotency_key IS NOT NULL)`),
+	index("ai_jobs_org_status_idx").using("btree", table.organizationId.asc().nullsLast().op("uuid_ops"), table.status.asc().nullsLast().op("uuid_ops")),
+	unique("ai_jobs_organization_id_id_key").on(table.id, table.organizationId),
 ]);
 
 export const privacyRequests = pgTable("privacy_requests", {

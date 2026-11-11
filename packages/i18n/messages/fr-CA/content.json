@@ -80,5 +80,13 @@
     "added": "Commentaire ajouté.",
     "onVersion": "Sur la version {number}",
     "unknownAuthor": "Membre retiré"
+  },
+  "ai": {
+    "generate": "Proposer avec l'IA",
+    "regenerate": "Nouvelle proposition IA",
+    "addAndGenerate": "Ajouter et proposer avec l'IA",
+    "succeeded": "Proposition IA enregistrée. Relisez-la et corrigez-la avant de la soumettre.",
+    "failed": "La proposition IA a échoué ou a été refusée par nos contrôles (faits non vérifiés, langue…). Aucun crédit n'a été utilisé. Vous pouvez écrire le texte vous-même.",
+    "queued": "Proposition en préparation. Rechargez la page dans un instant."
   }
 }

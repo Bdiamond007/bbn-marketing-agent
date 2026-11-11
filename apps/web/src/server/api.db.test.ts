@@ -9,7 +9,7 @@ import { FakeIdentityProvider } from "@bbn/auth";
 import { createPool } from "@bbn/db";
 import { ManualClock } from "@bbn/domain";
 import { PRICE_CATALOG } from "@bbn/integrations";
-import { FakeEmailSender, FakeMalwareScanner, FakeObjectStorage, FakePaymentsProvider } from "@bbn/integrations/fakes";
+import { FakeAiTextProvider, FakeEmailSender, FakeMalwareScanner, FakeObjectStorage, FakePaymentsProvider } from "@bbn/integrations/fakes";
 import { createLimiters, dispatch, type ApiDeps, type HandlerName } from "./api";
 
 const BASE = "http://localhost:3000";
@@ -52,7 +52,7 @@ beforeAll(() => {
   const clock = new ManualClock(new Date());
   pool = createPool(inject("dbUrls").appUrl, 4);
   email = new FakeEmailSender();
-  deps = { pool, idp: new FakeIdentityProvider(clock), email, clock, appBaseUrl: BASE, limiters: createLimiters(clock), payments: new FakePaymentsProvider(clock, PRICE_CATALOG), storage: new FakeObjectStorage(clock), scanner: new FakeMalwareScanner(), simulation: true };
+  deps = { pool, idp: new FakeIdentityProvider(clock), email, clock, appBaseUrl: BASE, limiters: createLimiters(clock), payments: new FakePaymentsProvider(clock, PRICE_CATALOG), storage: new FakeObjectStorage(clock), scanner: new FakeMalwareScanner(), ai: new FakeAiTextProvider(clock), aiModel: "fake-model", simulation: true };
 });
 afterAll(async () => {
   await pool?.end();

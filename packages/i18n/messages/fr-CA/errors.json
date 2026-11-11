@@ -49,6 +49,7 @@
     "media_not_in_quarantine": "Ce média a déjà été traité.",
     "variant_exists": "Cette variante existe déjà.",
     "invalid_transition": "Cette action n'est pas possible dans l'état actuel.",
-    "no_revision": "Enregistrez d'abord une version."
+    "no_revision": "Enregistrez d'abord une version.",
+    "idempotency_key_reused": "Cette demande a déjà été envoyée avec d'autres paramètres."
   }
 }

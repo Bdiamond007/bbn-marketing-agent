@@ -23,6 +23,8 @@ export function apiDeps(): ApiDeps {
     email: adapters.mode === "fake" ? withSimulatedMailLog(adapters.email) : adapters.email,
     clock: systemClock,
     payments: adapters.payments,
+    ai: adapters.ai,
+    aiModel: cfg.AI_MODEL_TEXT ?? "fake-model",
     storage: adapters.storage,
     scanner: adapters.scanner,
     simulation: adapters.mode === "fake",

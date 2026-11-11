@@ -100,9 +100,9 @@
   "gwt": "Given un fichier au faux MIME When il est complété Then rejeté et non publiable",
   "screen": "media",
   "entity": "MediaAsset",
-  "endpoint": "POST /api/v1/brands/{id}/assets/uploads ; POST /api/v1/assets/{id}/complete",
-  "test": "packages/integrations/src/fakes.test.ts (URLs signées) ; à compléter E10",
-  "status": "NOT_STARTED"
+  "endpoint": "/api/v1/organizations/{id}/media[/uploads|/{assetId}/complete|/{assetId}/url]",
+  "test": "packages/media/src/media.db.test.ts ; apps/web/e2e/app.spec.ts",
+  "status": "VERIFIED_LOCAL"
  },
  {
   "req": "AI-01",

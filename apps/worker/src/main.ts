@@ -4,6 +4,7 @@ import { createAdapters, type QueueName } from "@bbn/integrations";
 import { createLogger } from "@bbn/observability";
 import { projectPending, reconcileSubscriptions } from "@bbn/billing";
 import { createPool } from "@bbn/db";
+import { cleanupOrphanUploads } from "@bbn/media";
 import { processBatch, type Handler } from "./consumer";
 
 // Validation au démarrage : configuration invalide (dont fake en production) ⇒ arrêt immédiat.
@@ -31,6 +32,7 @@ const pool = config.DATABASE_URL ? createPool(config.DATABASE_URL, 5) : null;
 if (!pool) logger.warn("database_not_configured", { effect: "projection de facturation désactivée" });
 const RECONCILE_EVERY_MS = 15 * 60 * 1000;
 let lastReconcile = 0;
+let lastMediaCleanup = 0;
 
 logger.info("worker_started", { adapterMode: adapters.mode, simulation: adapters.mode === "fake" });
 while (!stopping) {
@@ -46,6 +48,13 @@ while (!stopping) {
       await reconcileSubscriptions({ pool, payments: adapters.payments, clock: systemClock }).then(
         (x) => logger.info("billing_reconciliation", x),
         (e: unknown) => logger.error("billing_reconciliation_failed", { error: e instanceof Error ? e.name : "unknown" }),
+      );
+    }
+    if (Date.now() - lastMediaCleanup >= 60 * 60 * 1000) {
+      lastMediaCleanup = Date.now();
+      await cleanupOrphanUploads({ pool, storage: adapters.storage, clock: systemClock }).then(
+        (n) => logger.info("media_orphan_cleanup", { cleaned: n }),
+        (e: unknown) => logger.error("media_orphan_cleanup_failed", { error: e instanceof Error ? e.name : "unknown" }),
       );
     }
   }

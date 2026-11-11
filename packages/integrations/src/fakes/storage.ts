@@ -34,7 +34,7 @@ export class FakeObjectStorage implements ObjectStorage {
   }
 
   /** Vérifie une URL signée émise par ce simulateur (méthode, signature, expiration). */
-  verifySignedUrl(url: string, method: "GET" | "PUT"): { ok: true; key: string } | { ok: false; reason: "expired" | "bad_signature" | "malformed" } {
+  verifySignedUrl(url: string, method: "GET" | "PUT"): { ok: true; key: string; contentType: string | null; maxBytes: number | null } | { ok: false; reason: "expired" | "bad_signature" | "malformed" } {
     let u: URL;
     try {
       u = new URL(url);
@@ -48,7 +48,8 @@ export class FakeObjectStorage implements ObjectStorage {
     if (!Number.isFinite(exp) || u.host !== this.bucket) return { ok: false, reason: "malformed" };
     if (!safeEqualHex(sig, hmacHex(SIGNING_SECRET, `${method}\n${key}\n${exp}\n${extra}`))) return { ok: false, reason: "bad_signature" };
     if (this.clock.now().getTime() >= exp * 1000) return { ok: false, reason: "expired" };
-    return { ok: true, key };
+    const x = new URLSearchParams(extra);
+    return { ok: true, key, contentType: x.get("ct"), maxBytes: x.has("max") ? Number(x.get("max")) : null };
   }
 
   get size(): number {
@@ -70,4 +71,9 @@ export class FakeObjectStorage implements ObjectStorage {
 
 function assertKey(key: string): void {
   if (key.length === 0 || key.startsWith("/") || key.includes("..")) throw new Error(`Clé de stockage invalide`);
+}
+
+/** Détection structurelle (instanceof non fiable entre bundles de routes Next.js). */
+export function isSimulatedStorage(s: ObjectStorage): s is FakeObjectStorage {
+  return typeof (s as Partial<FakeObjectStorage>).verifySignedUrl === "function";
 }

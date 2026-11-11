@@ -41,6 +41,11 @@
     "already_member": "This person is already a member of the organization.",
     "use_transfer_or_leave": "To change your own role, transfer ownership or leave the organization.",
     "already_owner": "This person is already an owner.",
-    "invalid_signature": "Invalid signature."
+    "invalid_signature": "Invalid signature.",
+    "unsupported_type": "Unsupported format (JPEG, PNG or WebP).",
+    "too_large": "File too large (20 MB maximum).",
+    "upload_missing": "The file was not received. Try uploading again.",
+    "media_not_publishable": "A media item is not ready or has no rights declaration.",
+    "media_not_in_quarantine": "This media item has already been processed."
   }
 }

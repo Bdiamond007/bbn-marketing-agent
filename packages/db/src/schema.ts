@@ -1,8 +1,31 @@
 // GÉNÉRÉ par scripts/introspect.sh (drizzle-kit pull + postprocess-schema) — ne pas éditer à la main.
-import { pgTable, index, unique, uuid, text, integer, timestamp, uniqueIndex, boolean, jsonb, date, bigint, numeric, primaryKey } from "drizzle-orm/pg-core"
+import { pgTable, unique, uuid, text, integer, timestamp, index, uniqueIndex, boolean, jsonb, date, bigint, numeric, primaryKey } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
+
+export const mediaAssets = pgTable("media_assets", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	organizationId: uuid("organization_id").notNull(),
+	storageKey: text("storage_key").notNull(),
+	mime: text().notNull(),
+	bytes: integer().notNull(),
+	sha256: text(),
+	width: integer(),
+	height: integer(),
+	rightsStatus: text("rights_status").default('undeclared').notNull(),
+	status: text().default('quarantined').notNull(),
+	uploadedBy: uuid("uploaded_by"),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	declaredMime: text("declared_mime"),
+	quarantineKey: text("quarantine_key"),
+	rejectedReason: text("rejected_reason"),
+	processedAt: timestamp("processed_at", { withTimezone: true, mode: 'string' }),
+}, (table) => [
+	unique("media_assets_organization_id_id_key").on(table.id, table.organizationId),
+	unique("media_assets_storage_key_key").on(table.storageKey),
+]);
 
 export const usageReservations = pgTable("usage_reservations", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
@@ -88,25 +111,6 @@ export const brands = pgTable("brands", {
 	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
 }, (table) => [
 	unique("brands_organization_id_id_key").on(table.id, table.organizationId),
-]);
-
-export const mediaAssets = pgTable("media_assets", {
-	id: uuid().defaultRandom().primaryKey().notNull(),
-	organizationId: uuid("organization_id").notNull(),
-	storageKey: text("storage_key").notNull(),
-	mime: text().notNull(),
-	bytes: integer().notNull(),
-	sha256: text().notNull(),
-	width: integer(),
-	height: integer(),
-	rightsStatus: text("rights_status").default('undeclared').notNull(),
-	status: text().default('quarantined').notNull(),
-	uploadedBy: uuid("uploaded_by"),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-}, (table) => [
-	unique("media_assets_organization_id_id_key").on(table.id, table.organizationId),
-	unique("media_assets_storage_key_key").on(table.storageKey),
 ]);
 
 export const socialConnections = pgTable("social_connections", {

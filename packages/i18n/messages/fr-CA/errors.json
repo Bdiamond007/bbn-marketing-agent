@@ -41,6 +41,11 @@
     "already_member": "Cette personne fait déjà partie de l'organisation.",
     "use_transfer_or_leave": "Pour changer votre propre rôle, transférez la propriété ou quittez l'organisation.",
     "already_owner": "Cette personne est déjà propriétaire.",
-    "invalid_signature": "Signature invalide."
+    "invalid_signature": "Signature invalide.",
+    "unsupported_type": "Format non pris en charge (JPEG, PNG ou WebP).",
+    "too_large": "Fichier trop volumineux (20 Mo maximum).",
+    "upload_missing": "Le fichier n'a pas été reçu. Réessayez le téléversement.",
+    "media_not_publishable": "Un média n'est pas prêt ou n'a pas de déclaration de droits.",
+    "media_not_in_quarantine": "Ce média a déjà été traité."
   }
 }

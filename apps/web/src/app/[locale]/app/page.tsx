@@ -2,6 +2,7 @@ import { titled } from "../../../lib/metadata";
 import { getTranslations } from "next-intl/server";
 import { getUsage, type UsageSummary } from "@bbn/billing";
 import { listBrands } from "@bbn/brands";
+import { listMedia } from "@bbn/media";
 import { Badge } from "../../../components/ui";
 import { apiDeps } from "../../../server/container";
 import { Card, Notice, ScreenState } from "../../../components/ui";
@@ -14,13 +15,14 @@ export default async function DashboardPage() {
   const { current } = await currentOrganization(session);
   const usage: UsageSummary | null = current ? await getUsage(apiDeps(), session, current.id) : null;
   const brands = current ? await listBrands(apiDeps(), session, current.id) : [];
+  const media = current ? await listMedia(apiDeps(), session, current.id) : [];
   // Onboarding reprenable (§5) : chaque étape reflète l'état réel, les étapes non livrées sont signalées comme telles.
   const steps: { key: "verifyEmail" | "organization" | "subscription" | "brand" | "media" | "social" | "firstContent" | "approval" | "scheduling"; state: "done" | "todo" | "later" }[] = [
     { key: "verifyEmail", state: session.emailVerified ? "done" : "todo" },
     { key: "organization", state: current ? "done" : "todo" },
     { key: "subscription", state: usage?.cycle ? "done" : "todo" },
     { key: "brand", state: brands.some((b) => b.status === "active") ? "done" : "todo" },
-    { key: "media", state: "later" },
+    { key: "media", state: media.some((m) => m.status === "ready") ? "done" : "todo" },
     { key: "social", state: "later" },
     { key: "firstContent", state: "later" },
     { key: "approval", state: "later" },

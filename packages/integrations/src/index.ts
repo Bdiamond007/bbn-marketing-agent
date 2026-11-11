@@ -7,6 +7,8 @@ import type { PaymentsProvider } from "./payments";
 import type { MessageQueue } from "./queue";
 import type { SocialProvider, SocialPublisher } from "./social";
 import type { ObjectStorage } from "./storage";
+import type { MalwareScanner } from "./scanner";
+import { FakeMalwareScanner } from "./fakes/scanner";
 
 export * from "./scenario";
 export * from "./storage";
@@ -15,10 +17,12 @@ export * from "./email";
 export * from "./payments";
 export * from "./ai";
 export * from "./social";
+export * from "./scanner";
 
 export interface Adapters {
   mode: "fake" | "live";
   storage: ObjectStorage;
+  scanner: MalwareScanner;
   queue: MessageQueue;
   email: EmailSender;
   payments: PaymentsProvider;
@@ -51,6 +55,7 @@ export function createAdapters(cfg: Pick<AppConfig, "ADAPTER_MODE" | "APP_ENV">,
     return {
       mode: "fake",
       storage: new FakeObjectStorage(clock),
+      scanner: new FakeMalwareScanner(),
       queue: new FakeMessageQueue(clock),
       email: new FakeEmailSender(),
       payments: new FakePaymentsProvider(clock, PRICE_CATALOG),

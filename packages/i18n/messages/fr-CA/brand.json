@@ -91,5 +91,48 @@
   "publishedVersion": "Version publiée : {version}",
   "notPublished": "Profil non publié",
   "statusDraft": "Brouillon",
-  "statusActive": "Active"
+  "statusActive": "Active",
+  "media": {
+    "title": "Médias",
+    "lead": "Photos et logos privés, vérifiés et réencodés avant toute utilisation.",
+    "upload": {
+      "title": "Ajouter une image",
+      "file": "Fichier image",
+      "fileHint": "JPEG, PNG ou WebP, 20 Mo maximum.",
+      "rights": "Droits d'utilisation",
+      "rightsOwned": "J'en suis l'auteur ou le propriétaire",
+      "rightsLicensed": "J'ai une licence d'utilisation",
+      "declare": "Je déclare détenir les droits nécessaires pour utiliser cette image dans mes publications.",
+      "usage": "Utilisation",
+      "usagePhoto": "Photo",
+      "usageLogo": "Logo",
+      "submit": "Téléverser",
+      "done": "Image vérifiée et prête.",
+      "rejected": "Image refusée : {reason}",
+      "declareRequired": "La déclaration de droits est obligatoire.",
+      "fileRequired": "Choisissez un fichier."
+    },
+    "empty": "Aucun média pour l'instant.",
+    "list": "Bibliothèque",
+    "status": {
+      "quarantined": "En quarantaine",
+      "validating": "Vérification",
+      "ready": "Prête",
+      "rejected": "Refusée",
+      "deleted": "Supprimée"
+    },
+    "dimensions": "{width} × {height} px",
+    "imageAlt": "Média {number}",
+    "reasons": {
+      "empty": "fichier vide",
+      "too_large": "fichier trop volumineux",
+      "malware": "menace détectée par l'antivirus",
+      "unsupported_type": "format non pris en charge",
+      "mime_mismatch": "le contenu ne correspond pas au type annoncé",
+      "too_many_pixels": "image trop grande en pixels",
+      "corrupt": "fichier illisible",
+      "scanner_unavailable": "analyse antivirus indisponible, réessayez",
+      "abandoned_upload": "téléversement abandonné"
+    }
+  }
 }

@@ -91,5 +91,48 @@
   "publishedVersion": "Published version: {version}",
   "notPublished": "Profile not published",
   "statusDraft": "Draft",
-  "statusActive": "Active"
+  "statusActive": "Active",
+  "media": {
+    "title": "Media",
+    "lead": "Private photos and logos, checked and re-encoded before any use.",
+    "upload": {
+      "title": "Add an image",
+      "file": "Image file",
+      "fileHint": "JPEG, PNG or WebP, 20 MB maximum.",
+      "rights": "Usage rights",
+      "rightsOwned": "I am the author or owner",
+      "rightsLicensed": "I have a usage licence",
+      "declare": "I declare that I hold the rights needed to use this image in my posts.",
+      "usage": "Use",
+      "usagePhoto": "Photo",
+      "usageLogo": "Logo",
+      "submit": "Upload",
+      "done": "Image checked and ready.",
+      "rejected": "Image rejected: {reason}",
+      "declareRequired": "The rights declaration is required.",
+      "fileRequired": "Choose a file."
+    },
+    "empty": "No media yet.",
+    "list": "Library",
+    "status": {
+      "quarantined": "Quarantined",
+      "validating": "Checking",
+      "ready": "Ready",
+      "rejected": "Rejected",
+      "deleted": "Deleted"
+    },
+    "dimensions": "{width} × {height} px",
+    "imageAlt": "Media {number}",
+    "reasons": {
+      "empty": "empty file",
+      "too_large": "file too large",
+      "malware": "threat detected by the antivirus",
+      "unsupported_type": "unsupported format",
+      "mime_mismatch": "content does not match the declared type",
+      "too_many_pixels": "image too large in pixels",
+      "corrupt": "unreadable file",
+      "scanner_unavailable": "antivirus scan unavailable, try again",
+      "abandoned_upload": "abandoned upload"
+    }
+  }
 }

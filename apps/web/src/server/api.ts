@@ -7,11 +7,12 @@ import { z } from "zod";
 import * as Auth from "@bbn/auth";
 import * as Billing from "@bbn/billing";
 import * as Brands from "@bbn/brands";
-import { isSimulatedPayments } from "@bbn/integrations/fakes";
+import * as Media from "@bbn/media";
+import { isSimulatedPayments, isSimulatedStorage } from "@bbn/integrations/fakes";
 import { ServiceError, type Clock } from "@bbn/domain";
 import { assertSameOrigin, clearSessionCookie, cookieName, errorResponse, json, locale, memberRole, parseBody, readCookie, requestContext, sessionCookie, uuid, type RequestContext } from "./http";
 
-export interface ApiDeps extends Billing.BillingDeps {
+export interface ApiDeps extends Billing.BillingDeps, Media.MediaDeps {
   clock: Clock;
   limiters: {
     signInIp: Auth.FixedWindowLimiter;
@@ -235,6 +236,45 @@ const handlers = {
     const s = await requireSession(req, deps);
     const b = await parseBody(req, z.object({ expectedVersion: z.number().int().nonnegative() }));
     return json(await Brands.publishProfile(deps, s, param(p, "id"), param(p, "brandId"), b.expectedVersion, ctx), 200, ctx);
+  },
+  "media.list": async (req, deps, ctx, p) => {
+    const s = await requireSession(req, deps);
+    return json({ data: await Media.listMedia(deps, s, param(p, "id")) }, 200, ctx);
+  },
+  "media.createUpload": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ contentType: z.string().max(100), bytes: z.number().int() }));
+    return json(await Media.createUpload(deps, s, param(p, "id"), b, ctx), 201, ctx);
+  },
+  "media.complete": async (req, deps, ctx, p) => {
+    assertSameOrigin(req, deps.appBaseUrl);
+    const s = await requireSession(req, deps);
+    const b = await parseBody(req, z.object({ rightsStatus: z.enum(["declared_owned", "declared_licensed"]), brandId: uuid.optional(), usageRole: z.enum(["logo", "photo"]).optional() }));
+    return json(await Media.completeUpload(deps, s, param(p, "id"), param(p, "assetId"), b, ctx), 200, ctx);
+  },
+  "media.viewUrl": async (req, deps, ctx, p) => {
+    const s = await requireSession(req, deps);
+    return json(await Media.mediaViewUrl(deps, s, param(p, "id"), param(p, "assetId")), 200, ctx);
+  },
+  /** Mode simulation uniquement : stockage simulé en mémoire, accessible par URL signée vérifiée et expirante. */
+  "dev.storagePut": async (req, deps, ctx) => {
+    if (!deps.simulation || !isSimulatedStorage(deps.storage)) throw new ServiceError("not_found");
+    const v = deps.storage.verifySignedUrl(new URL(req.url).searchParams.get("u") ?? "", "PUT");
+    if (!v.ok) throw new ServiceError("forbidden", { reason: v.reason });
+    if ((req.headers.get("content-type") ?? "") !== v.contentType) throw new ServiceError("validation_failed", { fields: ["contentType"] });
+    const body = new Uint8Array(await req.arrayBuffer());
+    if (v.maxBytes !== null && body.byteLength > v.maxBytes) throw new ServiceError("validation_failed", { reason: "too_large" });
+    await deps.storage.putObject(v.key, body, v.contentType ?? "application/octet-stream");
+    return json(null, 204, ctx);
+  },
+  "dev.storageGet": async (req, deps, ctx) => {
+    if (!deps.simulation || !isSimulatedStorage(deps.storage)) throw new ServiceError("not_found");
+    const v = deps.storage.verifySignedUrl(new URL(req.url).searchParams.get("u") ?? "", "GET");
+    if (!v.ok) throw new ServiceError("forbidden", { reason: v.reason });
+    const o = await deps.storage.getObject(v.key);
+    if (!o) throw new ServiceError("not_found");
+    return new Response(Buffer.from(o.body), { status: 200, headers: { "content-type": o.head.contentType, "cache-control": "private, no-store", "x-content-type-options": "nosniff", "x-request-id": ctx.requestId } });
   },
   /** Webhook fournisseur : pas de session ni de contrôle d'origine ; signature sur le corps brut. */
   "webhooks.stripe": async (req, deps, ctx) => {

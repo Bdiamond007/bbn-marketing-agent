@@ -248,3 +248,39 @@ test("marque : brouillon repris après rechargement, champs manquants, faits dat
   await expect(step.getByText("Fait")).toBeVisible();
   await expect(page.getByRole("listitem").filter({ hasText: "Connecter un compte social" }).getByText("Bientôt disponible")).toBeVisible();
 });
+
+const SMALL_PNG = Buffer.from("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", "base64");
+
+test("médias : image réelle vérifiée et affichée par URL signée ; faux type refusé ; droits obligatoires", async ({ page }) => {
+  const email = uniqEmail("media");
+  await signUpAndVerify(page, email);
+  await signIn(page, email);
+  await page.goto("/fr/app/organizations/new");
+  await page.getByLabel("Nom de l'organisation").fill("Atelier Médias (fictif)");
+  await page.getByRole("button", { name: "Créer" }).click();
+  await expect(page).toHaveURL(/\/fr\/app$/);
+  await page.goto("/fr/app/media");
+  await expect(page.getByText("Aucun média pour l'instant.")).toBeVisible();
+  await expectNoA11yViolations(page);
+
+  await page.getByLabel("Fichier image").setInputFiles({ name: "photo.png", mimeType: "image/png", buffer: SMALL_PNG });
+  await page.getByRole("button", { name: "Téléverser" }).click();
+  await expect(page.getByRole("alert").filter({ hasText: "La déclaration de droits est obligatoire." })).toBeVisible();
+  await page.getByLabel("Je déclare détenir les droits nécessaires").check();
+  await page.getByRole("button", { name: "Téléverser" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Image vérifiée et prête." })).toBeVisible();
+  const img = page.getByRole("img", { name: "Média 1" });
+  await expect(img).toBeVisible();
+  expect(await img.evaluate((el) => (el as HTMLImageElement).naturalWidth)).toBe(480);
+  await expect(page.getByText("480 × 320 px")).toBeVisible();
+
+  // Faux type : contenu texte annoncé comme JPEG.
+  await page.getByLabel("Fichier image").setInputFiles({ name: "faux.jpg", mimeType: "image/jpeg", buffer: Buffer.from("ceci n'est pas une image") });
+  await page.getByLabel("Je déclare détenir les droits nécessaires").check();
+  await page.getByRole("button", { name: "Téléverser" }).click();
+  await expect(page.getByRole("alert").filter({ hasText: "Image refusée : fichier illisible" })).toBeVisible();
+  await expectNoA11yViolations(page);
+
+  await page.goto("/fr/app");
+  await expect(page.getByRole("listitem").filter({ hasText: "Ajouter des médias" }).getByText("Fait")).toBeVisible();
+});

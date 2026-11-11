@@ -23,6 +23,8 @@ export function apiDeps(): ApiDeps {
     email: adapters.mode === "fake" ? withSimulatedMailLog(adapters.email) : adapters.email,
     clock: systemClock,
     payments: adapters.payments,
+    storage: adapters.storage,
+    scanner: adapters.scanner,
     simulation: adapters.mode === "fake",
     appBaseUrl: cfg.APP_BASE_URL.replace(/\/$/, ""),
     limiters: createLimiters(systemClock),

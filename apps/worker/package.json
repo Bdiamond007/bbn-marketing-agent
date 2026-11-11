@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/main.ts",
     "start": "node dist/main.js",
-    "build": "esbuild src/main.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/main.js --external:pg --external:drizzle-orm --external:zod --external:typescript",
+    "build": "esbuild src/main.ts --bundle --platform=node --format=esm --target=node22 --outfile=dist/main.js --external:pg --external:drizzle-orm --external:zod --external:typescript --external:sharp",
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
@@ -16,7 +16,8 @@
     "@bbn/observability": "workspace:*",
     "zod": "4.6.7",
     "@bbn/billing": "workspace:*",
-    "@bbn/db": "workspace:*"
+    "@bbn/db": "workspace:*",
+    "@bbn/media": "workspace:*"
   },
   "devDependencies": {
     "esbuild": "0.28.2",

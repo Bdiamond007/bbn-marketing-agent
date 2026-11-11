@@ -83,7 +83,7 @@ test("parcours complet FR : inscription, vérification, organisation, invitation
   await expect(page).toHaveURL(/\/fr\/app$/);
   await expect(page.getByText("Atelier Démo E2E (fictif)")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Quotas du cycle" })).toBeVisible();
-  await expect(page.getByText("Pas encore configuré.").first()).toBeVisible();
+  await expect(page.getByText("Aucun cycle de droits en cours. Choisissez un plan dans Facturation.")).toBeVisible();
 
   await page.getByRole("navigation", { name: "Navigation principale" }).getByRole("link", { name: "Équipe" }).click();
   await expect(page.getByRole("heading", { name: "Équipe", level: 1 })).toBeVisible();
@@ -190,5 +190,8 @@ test("facturation : page de succès sans effet, paiement simulé, abonnement act
   const rights = page.locator("section").filter({ has: page.getByRole("heading", { name: "Droits du cycle en cours" }) });
   await expect(rights.getByText("15 contenus sources")).toBeVisible();
   await expect(rights.getByText("45 publications")).toBeVisible();
+  await page.goto("/fr/app");
+  await expect(page.getByText("Contenus sources : 0 utilisés sur 15 (15 restants)")).toBeVisible();
+  await expect(page.getByText("Publications : 0 réservées ou envoyées sur 45 (45 restantes)")).toBeVisible();
   await expectNoA11yViolations(page);
 });

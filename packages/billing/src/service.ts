@@ -172,3 +172,9 @@ export async function ingestWebhook(deps: { pool: pg.Pool; payments: PaymentsPro
   const r = await deps.pool.query<{ inserted: boolean }>("SELECT billing_record_webhook('stripe', $1, $2, $3) AS inserted", [event.id, event.type, JSON.stringify({ createdAt: event.createdAt, data: event.data })]);
   return { duplicate: !r.rows[0]?.inserted };
 }
+
+/** Usage du cycle courant pour l'affichage (tout membre). Aucune valeur inventée : null sans cycle. */
+export async function getUsage(deps: BillingDeps, session: SessionInfo, orgId: string) {
+  const { usageSummary } = await import("./quota");
+  return asMember(deps, session, orgId, "report.read", ({ client }) => usageSummary(client, orgId, deps.clock.now()));
+}

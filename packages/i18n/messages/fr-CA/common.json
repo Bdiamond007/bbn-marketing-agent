@@ -54,7 +54,10 @@
     "upcoming": "Prochains envois",
     "reconnect": "Comptes à reconnecter",
     "notConfigured": "Pas encore configuré.",
-    "verifyEmailFirst": "Vérifiez votre adresse courriel pour débloquer la création d'organisation et la connexion des réseaux."
+    "verifyEmailFirst": "Vérifiez votre adresse courriel pour débloquer la création d'organisation et la connexion des réseaux.",
+    "usageContent": "Contenus sources : {used} utilisés sur {limit} ({remaining} restants)",
+    "usagePublications": "Publications : {used} réservées ou envoyées sur {limit} ({remaining} restantes)",
+    "noCycle": "Aucun cycle de droits en cours. Choisissez un plan dans Facturation."
   },
   "comingSoon": {
     "title": "Section pas encore disponible",

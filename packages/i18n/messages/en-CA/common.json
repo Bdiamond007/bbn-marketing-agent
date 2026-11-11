@@ -54,7 +54,10 @@
     "upcoming": "Upcoming posts",
     "reconnect": "Accounts to reconnect",
     "notConfigured": "Not configured yet.",
-    "verifyEmailFirst": "Verify your email address to unlock organization creation and network connections."
+    "verifyEmailFirst": "Verify your email address to unlock organization creation and network connections.",
+    "usageContent": "Source contents: {used} used of {limit} ({remaining} left)",
+    "usagePublications": "Posts: {used} reserved or sent of {limit} ({remaining} left)",
+    "noCycle": "No entitlement cycle in progress. Choose a plan in Billing."
   },
   "comingSoon": {
     "title": "Section not available yet",

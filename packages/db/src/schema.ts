@@ -1,8 +1,26 @@
 // GÉNÉRÉ par scripts/introspect.sh (drizzle-kit pull + postprocess-schema) — ne pas éditer à la main.
-import { pgTable, uniqueIndex, unique, uuid, text, integer, timestamp, boolean, index, jsonb, date, bigint, numeric, primaryKey } from "drizzle-orm/pg-core"
+import { pgTable, index, unique, uuid, text, integer, timestamp, uniqueIndex, boolean, jsonb, date, bigint, numeric, primaryKey } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
+
+export const usageReservations = pgTable("usage_reservations", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	organizationId: uuid("organization_id").notNull(),
+	cycleId: uuid("cycle_id").notNull(),
+	type: text().notNull(),
+	quantity: integer().notNull(),
+	resourceId: uuid("resource_id").notNull(),
+	status: text().default('reserved').notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
+	parentResourceId: uuid("parent_resource_id"),
+}, (table) => [
+	index("usage_reservations_cycle_idx").using("btree", table.cycleId.asc().nullsLast().op("text_ops"), table.type.asc().nullsLast().op("uuid_ops"), table.status.asc().nullsLast().op("uuid_ops")),
+	index("usage_reservations_parent_idx").using("btree", table.parentResourceId.asc().nullsLast().op("text_ops"), table.type.asc().nullsLast().op("uuid_ops"), table.status.asc().nullsLast().op("uuid_ops")).where(sql`(parent_resource_id IS NOT NULL)`),
+	unique("usage_reservations_organization_id_id_key").on(table.id, table.organizationId),
+	unique("usage_reservations_type_resource_id_key").on(table.type, table.resourceId),
+]);
 
 export const subscriptions = pgTable("subscriptions", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
@@ -200,22 +218,6 @@ export const entitlements = pgTable("entitlements", {
 }, (table) => [
 	index("entitlements_cycle_idx").using("btree", table.cycleId.asc().nullsLast().op("text_ops"), table.key.asc().nullsLast().op("uuid_ops")),
 	uniqueIndex("entitlements_cycle_key_source_uq").using("btree", table.cycleId.asc().nullsLast().op("uuid_ops"), table.key.asc().nullsLast().op("text_ops"), table.source.asc().nullsLast().op("uuid_ops")),
-]);
-
-export const usageReservations = pgTable("usage_reservations", {
-	id: uuid().defaultRandom().primaryKey().notNull(),
-	organizationId: uuid("organization_id").notNull(),
-	cycleId: uuid("cycle_id").notNull(),
-	type: text().notNull(),
-	quantity: integer().notNull(),
-	resourceId: uuid("resource_id").notNull(),
-	status: text().default('reserved').notNull(),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	updatedAt: timestamp("updated_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-}, (table) => [
-	index("usage_reservations_cycle_idx").using("btree", table.cycleId.asc().nullsLast().op("uuid_ops"), table.type.asc().nullsLast().op("uuid_ops"), table.status.asc().nullsLast().op("text_ops")),
-	unique("usage_reservations_organization_id_id_key").on(table.id, table.organizationId),
-	unique("usage_reservations_type_resource_id_key").on(table.type, table.resourceId),
 ]);
 
 export const invoiceReferences = pgTable("invoice_references", {
